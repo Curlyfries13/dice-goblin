@@ -18,7 +18,7 @@
   },
   "keywords": [],
   "author": "Jon Yocky",
-  "license": "UNLICENSED",
+  "license": "GPL V3",
   "devDependencies": {
     "@types/jest": "^29.0.0",
     "@types/seedrandom": "^3.0.2",
