@@ -1,0 +1,54 @@
+{
+  "name": "dice-goblin",
+  "version": "0.1.0",
+  "description": "Dice rolling interface for the hordes",
+  "main": "dist/index.js",
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "scripts": {
+    "lint": "tsc --noEmit && eslint",
+    "lint:fix": "tsc --noEmit && eslint --fix",
+    "prettier:check": "prettier --check .",
+    "prettier:fix": "prettier --write .",
+    "build": "tsc",
+    "spell": "cspell src/**/*.ts",
+    "spell:fix": "cspell",
+    "test": "jest",
+    "prepare": "husky install"
+  },
+  "keywords": ["dice", "rng", "random", "parsing"],
+  "author": "Jon Yocky",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/cli-progress": "^3.11.0",
+    "@types/jest": "^29.0.0",
+    "@types/node": "^18.15.3",
+    "@types/seedrandom": "^3.0.2",
+    "@typescript-eslint/eslint-plugin": "^5.35.1",
+    "@typescript-eslint/parser": "^5.35.1",
+    "cli-progress": "^3.12.0",
+    "cspell": "^6.8.1",
+    "csv": "^6.3.1",
+    "esbuild": "^0.15.5",
+    "esbuild-jest": "^0.5.0",
+    "eslint": "^8.23.0",
+    "eslint-config-airbnb-base": "^15.0.0",
+    "eslint-config-airbnb-typescript": "^17.0.0",
+    "eslint-config-prettier": "^8.5.0",
+    "eslint-plugin-import": "^2.26.0",
+    "fast-check": "^3.7.1",
+    "husky": "^8.0.1",
+    "jest": "^29.0.1",
+    "lint-staged": "^13.0.3",
+    "prettier": "^2.7.1",
+    "simple-statistics": "^7.8.3",
+    "ts-node": "^10.9.1",
+    "typescript": "^4.8.2"
+  },
+  "dependencies": {
+    "chevrotain": "^10.4.2",
+    "random": "^3.0.6",
+    "seedrandom": "^3.0.5"
+  }
+}

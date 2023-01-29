@@ -1,0 +1,23 @@
+.DS_Store
+.idea
+.cspell
+*.log
+tmp/
+.editorconfig
+
+*.tern-port
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+*.tsbuildinfo
+.npm
+.eslintcache
+
+# build artifacts
+dist/
+
+# personal debug configs
+launch.json
+debugTsconfig.json
+debug.el
