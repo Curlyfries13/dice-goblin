@@ -15,16 +15,18 @@ import { DiceTerm } from '../DiceTerm';
  */
 
 export default class Drop implements Modifier {
-  name = 'Drop'
+  name = 'Drop';
   base: DiceTerm;
   baseResults: number[];
   dropQuantity: number;
 
   sides: number;
-  count: number;
-  min: number;
-  max: number;
-  average: number;
+  statProps: {
+    count: number;
+    min: number;
+    max: number;
+    average: number;
+  };
   current: number[];
 
   // TODO add exceptions in the following case(s)
@@ -35,16 +37,18 @@ export default class Drop implements Modifier {
 
     this.baseResults = [];
     this.current = [];
-    // NOTE: this property can change when rolled
-    this.count = base.count - dropQuantity;
     this.sides = base.sides;
-    // these properties do not change...
-    // TODO: re-evaluate the minimum if the minimum for a die is not 1
-    this.min = base.min - 1 * dropQuantity;
-    // TODO: re-evaluate the minimum if the maximum for a die is not the total number of sides
-    this.max = base.max - base.sides * dropQuantity;
-    // TODO: correctly calculate the average for this system
-    this.average = base.average;
+    this.statProps = {
+      // NOTE: this property can change when rolled
+      count: base.statProps.count - dropQuantity,
+      // these properties do not change...
+      // TODO: re-evaluate the minimum if the minimum for a die is not 1
+      min: base.statProps.min - 1 * dropQuantity,
+      // TODO: re-evaluate the minimum if the maximum for a die is not the total number of sides
+      max: base.statProps.max - base.sides * dropQuantity,
+      // TODO: correctly calculate the average for this system
+      average: base.statProps.average,
+    };
   }
 
   roll(): number {
@@ -60,7 +64,7 @@ export default class Drop implements Modifier {
     // skip the first element - it is the sum of the base element.
     this.baseResults.slice(1).map((element, i) => {
       temp.push([element, i]);
-    })
+    });
     temp.sort((a, b) => {
       return a[0] - b[0];
     });

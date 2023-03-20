@@ -11,28 +11,34 @@ import { DiceTerm } from './DiceTerm';
  */
 export class SimpleDiceGroup implements DiceTerm {
   sides: number;
-  count: number;
-  min: number;
-  max: number;
-  average: number;
+  statProps: {
+    count: number;
+    min: number;
+    max: number;
+    average: number;
+  };
   seed: undefined | seedrandom;
   current: number[];
 
   constructor(sides: number = 6, count: number = 1, seed?: PRNG) {
     this.sides = sides;
-    this.count = count;
-    // this die engine always uses a minimum value of 1
-    this.min = count;
-    this.max = count * sides;
-    this.average = ((1 + sides) / 2.0) * count;
+    this.statProps = {
+      count: count,
+      // this die engine always uses a minimum value of 1
+      min: count,
+      max: count * sides,
+      average: ((1 + sides) / 2.0) * count,
+    };
     if (seed !== undefined) random.use(seed as unknown as RNG);
     this.current = [count].concat(Array(count).fill(1));
   }
 
   // Roll this group and return the result
   roll() {
-    if (this.sides === undefined || this.count === undefined) {
+    if (this.sides === undefined || this.statProps.count === undefined) {
       // the group is not defined, initialize first
+      // TODO: write more descriptive errors
+      // TODO: create custom error types
       throw Error('Dice Group is not configured');
     }
     return this.rollGroup()[0];
@@ -44,7 +50,7 @@ export class SimpleDiceGroup implements DiceTerm {
    * individual die faces
    */
   rollGroup() {
-    const results = Array.apply(0, Array(this.count)).map(() => {
+    const results = Array.apply(0, Array(this.statProps.count)).map(() => {
       // Representing a regular die, the smallest side has 1 pip or shows 1
       return random.int(1, this.sides);
     });

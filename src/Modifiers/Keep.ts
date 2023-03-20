@@ -5,20 +5,22 @@ import { DiceTerm } from '../DiceTerm';
  * The Keep modifier removes dice form the pool if the vale is over or under a
  * target value
  *
- * Super similar to Drop, in fact it's a reciprical of sorts
+ * Super similar to Drop, in fact it's a reciprocal of sorts
  */
 
 export default class Keep implements Modifier {
-  name = 'Keep'
+  name = 'Keep';
   base: DiceTerm;
   baseResults: number[];
   keepQuantity: number;
 
   sides: number;
-  count: number;
-  min: number;
-  max: number;
-  average: number;
+  statProps: {
+    count: number;
+    min: number;
+    max: number;
+    average: number;
+  };
   current: number[];
 
   // NOTE this is the same as dropping, but in the reciprocal
@@ -31,16 +33,18 @@ export default class Keep implements Modifier {
 
     this.baseResults = [];
     this.current = [];
-    // NOTE: this property can change when rolled
-    this.count = keepQuantity;
     this.sides = base.sides;
-    // these properties do not change...
-    // TODO: re-evaluate the minimum if the minimum for a die is not 1
-    this.min = 1 * keepQuantity;
-    // TODO: re-evaluate the minimum if the maximum for a die is not the total number of sides
-    this.max = base.sides * keepQuantity;
-    // TODO: correctly calculate the average for this system
-    this.average = base.average;
+    // NOTE: this property can change when rolled
+    this.statProps = {
+      count: keepQuantity,
+      // these properties do not change...
+      // TODO: re-evaluate the minimum if the minimum for a die is not 1
+      min: 1 * keepQuantity,
+      // TODO: re-evaluate the minimum if the maximum for a die is not the total number of sides
+      max: base.sides * keepQuantity,
+      // TODO: correctly calculate the average for this system
+      average: base.statProps.average,
+    };
   }
 
   roll(): number {
@@ -56,7 +60,7 @@ export default class Keep implements Modifier {
     // create a [value, index] mapping
     this.baseResults.slice(1).map((element, i) => {
       temp.push([element, i]);
-    })
+    });
     temp.sort((a, b) => {
       return a[0] - b[0];
     });
@@ -66,7 +70,7 @@ export default class Keep implements Modifier {
       // we constructed the value mapping by removing the sum from the base
       // element, however in this case we're retrieving the original value from
       // that array. Therefore, we're effectively working in the mapping array
-      // +1. This could also be fixed during the construciton of the temp array.
+      // +1. This could also be fixed during the construction of the temp array.
       return this.baseResults[valueIndex[1] + 1];
     });
     const sum = this.current.reduce((acc, curr) => {

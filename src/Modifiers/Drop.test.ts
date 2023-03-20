@@ -24,7 +24,7 @@ describe.each([
   const mod = new Drop(dice, 2);
   const result = mod.rollGroup();
   expect(result.length).toEqual(4);
-})
+});
 
 it('should behave predictably with provided seed', () => {
   const rng = seedrandom('test');
@@ -38,4 +38,4 @@ it('drops the lowest values automatically', () => {
   const mod = new Drop(dice, 2);
   const result = mod.rollGroup();
   expect(result[0]).toBe(7);
-})
+});

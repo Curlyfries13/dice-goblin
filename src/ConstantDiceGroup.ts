@@ -6,29 +6,34 @@ import { DiceTerm } from './DiceTerm';
  */
 
 export class ConstantDiceGroup implements DiceTerm {
+  statProps: {
+    count: number;
+    min: number;
+    max: number;
+    average: number;
+  };
   sides: number;
-  count: number;
-  min: number;
-  max: number;
-  average: number;
   current: number[];
   results: number[];
 
   constructor(results: number[], sides?: number) {
     this.results = results;
-    this.count = results.length;
     if (sides === undefined) {
       this.sides = Math.max(...results);
     } else {
       this.sides = sides;
     }
     const sum = results.reduce((acc, curr) => {
-      return acc += curr;
+      return (acc += curr);
     }, 0);
 
-    this.min = sum;
-    this.max = sum;
-    this.average = sum;
+    this.statProps = {
+      count: results.length,
+      min: sum,
+      max: sum,
+      average: sum,
+    };
+
     this.current = [sum].concat(this.results);
   }
 

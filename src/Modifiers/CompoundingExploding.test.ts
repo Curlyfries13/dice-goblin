@@ -7,6 +7,6 @@ it('Compounding Explodes dice that roll the highest amount', () => {
   const dice = new SimpleDiceGroup(4, 10, rng);
   const explodingDice = new CompoundingExploding(dice);
   const result = explodingDice.rollGroup();
-  expect(explodingDice.count).toBe(10);
+  expect(explodingDice.statProps.count).toBe(10);
   expect(explodingDice.current.some((element) => element > 4)).toBeTruthy();
 });

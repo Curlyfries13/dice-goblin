@@ -11,11 +11,11 @@ describe.each([
   [10, 2, 2, 20, 11],
   [4, 10, 10, 40, 25],
   [6, 3, 3, 18, 10.5],
-])('should calculcate min max and average', (count, sides, min, max, avg) => {
+])('should calculate min max and average', (count, sides, min, max, avg) => {
   const dice = new SimpleDiceGroup(count, sides);
-  expect(dice.min).toBe(min);
-  expect(dice.max).toBe(max);
-  expect(dice.average).toBe(avg);
+  expect(dice.statProps.min).toBe(min);
+  expect(dice.statProps.max).toBe(max);
+  expect(dice.statProps.average).toBe(avg);
 });
 
 it('should behave predictably with a provided seed', () => {

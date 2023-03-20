@@ -17,9 +17,15 @@ export interface Term {
   rollGroup: () => number[];
   // If this dice term has a number of dice, then this should contain that
   // count.
-  count: number;
   current: number[];
-  average: number;
-  min: number;
-  max: number;
+  // organize the term's statistical properties in a sub object to make tree-ing
+  // easier, and quiet the TS engine
+  // TODO: add percentile stats
+  statProps: {
+    count: number;
+    average: number;
+    min: number;
+    max: number;
+    [key: string]: any;
+  };
 }

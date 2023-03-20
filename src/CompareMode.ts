@@ -4,7 +4,7 @@
 enum CompareMode {
   Equal,
   LessThan,
-  GreaterThan
+  GreaterThan,
 }
 
 export default CompareMode;

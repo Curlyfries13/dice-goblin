@@ -12,7 +12,7 @@
     "prettier:check": "prettier --check .",
     "prettier:fix": "prettier --write .",
     "spell": "cspell ./**/*.ts",
-    "spell:fix": "cspell ./**/*.ts --fix",
+    "spell:fix": "cspell",
     "test": "jest",
     "prepare": "husky install"
   },
@@ -21,6 +21,7 @@
   "license": "GPL V3",
   "devDependencies": {
     "@types/jest": "^29.0.0",
+    "@types/node": "^18.15.3",
     "@types/seedrandom": "^3.0.2",
     "@typescript-eslint/eslint-plugin": "^5.35.1",
     "@typescript-eslint/parser": "^5.35.1",
@@ -36,6 +37,7 @@
     "jest": "^29.0.1",
     "lint-staged": "^13.0.3",
     "prettier": "^2.7.1",
+    "ts-node": "^10.9.1",
     "typescript": "^4.8.2"
   },
   "dependencies": {

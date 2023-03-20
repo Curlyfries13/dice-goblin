@@ -5,12 +5,13 @@ import { Combinator, CombinatorGenerator } from './Combinator';
  * A Roll is a combination of several dice groups, combinators, and constants
  */
 export class Roll implements Term {
-  min: number;
-  max: number;
-  average: number;
-  count: number;
+  statProps: {
+    min: number;
+    max: number;
+    average: number;
+    count: number;
+  };
   current: number[];
-  roller: () => number;
   terms: Term[];
   generators: CombinatorGenerator[];
   combinators: Combinator[];
@@ -32,17 +33,19 @@ export class Roll implements Term {
     this.tree = (method, isCallable) => {
       return this.terms.reduce((acc, current) => {
         if (isCallable) {
-          return (acc += current[method]());
+          return (acc += current.statProps[method]());
         } else {
-          return (acc += current[method]);
+          return (acc += current.statProps[method]);
         }
       }, 0);
     };
 
-    this.count = this.tree('count', false);
-    this.average = this.tree('average', false);
-    this.min = this.tree('min', false);
-    this.max = this.tree('max', false);
+    this.statProps = {
+      count: this.tree('count', false),
+      average: this.tree('average', false),
+      min: this.tree('min', false),
+      max: this.tree('max', false),
+    };
     // create the combinators for this group
     this.generators.map((curr, i) => {
       // if this is the first roll, then roll the first die, otherwise the

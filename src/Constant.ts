@@ -2,26 +2,30 @@ import { Term } from './Term';
 
 export class Constant implements Term {
   sides: number;
-  count: number;
-  min: number;
-  max: number;
-  average: number;
+  statProps: {
+    count: number;
+    min: number;
+    max: number;
+    average: number;
+  };
   current: number[];
 
   constructor(value: number = 0) {
     this.sides = 0;
-    this.count = 0;
-    this.min = value;
-    this.max = value;
-    this.average = value;
+    this.statProps = {
+      count: 0,
+      min: value,
+      max: value,
+      average: value,
+    };
     this.current = [value];
   }
 
   roll(): number {
-    return this.max;
+    return this.statProps.max;
   }
 
   rollGroup(): number[] {
-    return [this.max, this.max];
+    return [this.statProps.max, this.statProps.max];
   }
 }

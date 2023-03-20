@@ -4,7 +4,7 @@ import seedrandom from 'seedrandom';
 it('should initialize a single fudge die by default', () => {
   const dice = new FudgeDiceGroup();
   expect(dice.sides).toBe(6);
-  expect(dice.count).toBe(1);
+  expect(dice.statProps.count).toBe(1);
 });
 
 it('should behave predictably with provided seed', () => {

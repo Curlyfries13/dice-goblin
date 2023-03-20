@@ -27,7 +27,7 @@ it('keeps the highest die automatically', () => {
   const mod = new Keep(dice, 1);
   const result = mod.rollGroup();
   expect(result[0]).toBe(4);
-})
+});
 
 it('should behave predictably with provided seed', () => {
   const rng = seedrandom('test');
