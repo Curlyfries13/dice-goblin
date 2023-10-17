@@ -1,8 +1,10 @@
 {
   "name": "dice-goblin",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Dice rolling interface for the hordes",
   "main": "dist/index.js",
+  "module": "dist/index.mjs",
+  "types": "dist/index.d.ts",
   "engines": {
     "node": ">=18.0.0"
   },
@@ -11,7 +13,7 @@
     "lint:fix": "tsc --noEmit && eslint --fix",
     "prettier:check": "prettier --check .",
     "prettier:fix": "prettier --write .",
-    "build": "tsc",
+    "build": "tsup src/index.ts --format cjs,esm --dts",
     "spell": "cspell src/**/*.ts",
     "spell:fix": "cspell",
     "test": "jest",
@@ -44,6 +46,7 @@
     "prettier": "^2.7.1",
     "simple-statistics": "^7.8.3",
     "ts-node": "^10.9.1",
+    "tsup": "^7.2.0",
     "typescript": "^4.8.2"
   },
   "dependencies": {

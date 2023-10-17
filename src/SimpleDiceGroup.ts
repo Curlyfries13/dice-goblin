@@ -53,7 +53,7 @@ export class SimpleDiceGroup implements DiceTerm, StatisticalGenerator {
   }
 
   // Roll this group and return the result
-  roll() {
+  roll(): number {
     if (this.sides === undefined || this.count === undefined) {
       // the group is not defined, initialize first
       // TODO: write more descriptive errors
@@ -68,7 +68,7 @@ export class SimpleDiceGroup implements DiceTerm, StatisticalGenerator {
    * The first element of the group is the sum, the following results are the
    * individual die faces
    */
-  rollGroup() {
+  rollGroup(): number[] {
     const count = this.count.value();
     const sides = this.sides.value();
     let results: number[] = [];
