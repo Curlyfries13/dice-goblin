@@ -23,11 +23,11 @@ let value = dice.value();
 
 ## Developing
 
-Dice Goblin is under active development
+Dice Goblin is under active development; collaboration guidelines and more details on how to help out are on the way!
 
-### Bugs, Feature Requests, and Help
+### Bugs / Feature Requests
 
-Bugs and features
+Bugs and feature requests should be reported to the main repository, but this package is currently under development - I may not get to feature requests.
 
 ### Tests
 
