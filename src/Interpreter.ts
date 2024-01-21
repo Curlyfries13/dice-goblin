@@ -10,6 +10,7 @@ import RerollFactory from './Modifiers/RerollFactory';
 import RerollOnceFactory from './Modifiers/RerollOnceFactory';
 import KeepFactory from './Modifiers/KeepFactory';
 import DropFactory from './Modifiers/DropFactory';
+import KeepDropMode from './Modifiers/KeepDropMode';
 
 import Add from './Combinators/Add';
 
@@ -21,8 +22,10 @@ import Divide from './Combinators/Divide';
 import Modulo from './Combinators/Modulo';
 import Multiply from './Combinators/Multiply';
 import Power from './Combinators/Power';
+import { ModifierFactory } from './ModifierFactory';
 import { TargetModifierFactory } from './TargetModifierFactory';
 import { MagnitudeModifierFactory } from './MagnitudeModifierFactory';
+import { Modifier } from './Modifier';
 
 /**
  * The Parser from Chevrotain produces a tree
@@ -127,34 +130,51 @@ class DieToAstVisitor extends BaseDiceVisitor {
     }
   }
 
-  // return a factory that can be passed back up
-  // TODO: implement adding targets or other magnitudes
-  modifier(ctx: any): {
-    factory: TargetModifierFactory;
-    target: number | undefined;
-    compare: CompareMode;
-  } {
-    let factory: TargetModifierFactory;
-    let target: number | undefined;
+  // give me a function that takes a base
+  modifier(ctx: any): ModifierFactory {
+    let out;
+    let factory: TargetModifierFactory | MagnitudeModifierFactory;
     let compare: CompareMode = CompareMode.Equal;
+    let kdMode: KeepDropMode | undefined;
+    let statGen: StatisticalGenerator;
+    let isMagnitude = true;
     if (ctx.magnitudeModifier) {
+      isMagnitude = true;
       factory = this.visit(ctx.magnitudeModifier);
     } else {
+      isMagnitude = false;
       factory = this.visit(ctx.targetModifier);
     }
     if (ctx.magnitude_value) {
-      target = this.visit(ctx.magnitude_value);
+      statGen = this.visit(ctx.magnitude_value);
     }
     if (ctx.direct_target) {
-      target = this.visit(ctx.direct_target);
+      statGen = this.visit(ctx.direct_target);
     }
     if (ctx.Comparison) {
       compare = this.getComparison(ctx);
     }
     if (ctx.comparison_target) {
-      target = this.visit(ctx.comparison_target);
+      statGen = this.visit(ctx.comparison_target);
     }
-    return { factory, target, compare };
+    out = ({ base }: { base: DiceTerm }): Modifier => {
+      if (isMagnitude) {
+        const resolved: MagnitudeModifierFactory = factory as MagnitudeModifierFactory;
+        return resolved({
+          base,
+          magnitude: statGen,
+          mode: kdMode,
+        });
+      } else {
+        const resolved: TargetModifierFactory = factory as TargetModifierFactory;
+        return resolved({
+          base,
+          target: statGen,
+          compare: compare,
+        });
+      }
+    };
+    return out;
   }
 
   // funnily enough, a die expression can literally be a single value?
@@ -175,15 +195,8 @@ class DieToAstVisitor extends BaseDiceVisitor {
     }
     // check for modifiers: they are optional
     if (ctx.modifier) {
-      let modifierConfig = this.visit(ctx.modifier);
-      const modifierFactory = modifierConfig.factory;
-      const target = modifierConfig.target;
-      const compare = modifierConfig.compare;
-      // TODO: this doesn't work for capturing the final diceExpression we're
-      // not capturing target, or magnitude information.  We'll probably want to
-      // migrate the return function from the modifier to give all the values to
-      // use the factory. At that point though, we do not need the factory?
-      return modifierFactory({ base: output, target, compare });
+      let modifierFactory = this.visit(ctx.modifier);
+      return modifierFactory({ base: output });
     }
     return output;
   }

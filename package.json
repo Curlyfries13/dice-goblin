@@ -5,7 +5,9 @@
   "main": "dist/index.js",
   "module": "dist/index.mjs",
   "types": "dist/index.d.ts",
-  "files": ["dist"],
+  "files": [
+    "dist"
+  ],
   "engines": {
     "node": ">=18.0.0"
   },
@@ -20,7 +22,12 @@
     "test": "jest",
     "prepare": "husky install"
   },
-  "keywords": ["dice", "rng", "random", "parsing"],
+  "keywords": [
+    "dice",
+    "rng",
+    "random",
+    "parsing"
+  ],
   "author": "Jon Yocky",
   "license": "MIT",
   "devDependencies": {

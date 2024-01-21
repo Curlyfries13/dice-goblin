@@ -42,11 +42,33 @@ const dice1 = resolver.visit(parse('3d6').cst);
 const dice2 = resolver.visit(parse('2d10').cst);
 const dice3 = resolver.visit(parse('8d4').cst);
 const dice4 = resolver.visit(parse('3d6!').cst);
+const dropBase = resolver.visit(parse('6d6').cst);
+const drop1 = resolver.visit(parse('6d6d1').cst);
+const drop2 = resolver.visit(parse('6d6d2').cst);
+const drop3 = resolver.visit(parse('6d6d3').cst);
 let rolls = [
   {
-    name: '3d6 / 2d10',
+    name: '6d6',
     roll: () => {
-      return dice1.roll() / dice2.roll();
+      return dropBase.roll();
+    },
+  },
+  {
+    name: '6d6d1',
+    roll: () => {
+      return drop1.roll();
+    },
+  },
+  {
+    name: '6d6d2',
+    roll: () => {
+      return drop2.roll();
+    },
+  },
+  {
+    name: '6d6d3',
+    roll: () => {
+      return drop3.roll();
     },
   },
   {
@@ -76,5 +98,5 @@ let rolls = [
 ];
 
 rolls.map((test) => {
-  testStats(test.roll, 100000, test.name);
+  testStats(test.roll, 10000000, test.name);
 });

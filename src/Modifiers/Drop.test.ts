@@ -7,6 +7,7 @@ import { Constant } from '../Constant';
 
 describe.each([
   [10, 6, 3],
+  [20, 6, 5],
   [9, 4, 1],
   [2, 20, 1],
 ])('Drops a specified number of dice from a roll', (count, sides, drop) => {

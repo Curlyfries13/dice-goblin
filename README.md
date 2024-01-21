@@ -2,14 +2,8 @@
 
 Dice rolling for the hordes!
 
-## What is Dice-Goblin?
-
 This engine is a flexible dice parser, rolling engine, and statistical model for
 rolling dice.
-
-## How to Use
-
-The parser and interpreting engine are accessible
 
 ```javascript
 import parseDice from 'dice-goblin';
@@ -21,21 +15,25 @@ const dice = parseDice('1d20');
 let value = dice.value();
 ```
 
-## Developing
+## Installation
+
+dice-goblin is available from the npm registry:
+
+```shell
+$ npm install dice-goblin
+```
+
+This provides a parser and dice engine, and can be used to both analyze dice rolls, and simulate them
+
+## Features
+
+- Robust Dice parser
+- Statistical modeling for most dice
+
+## Contributing
 
 Dice Goblin is under active development; collaboration guidelines and more details on how to help out are on the way!
 
 ### Bugs / Feature Requests
 
 Bugs and feature requests should be reported to the main repository, but this package is currently under development - I may not get to feature requests.
-
-### Tests
-
-Run the tests for this project like so:
-
-```shell
-pnpm test
-```
-
-This not only runs the unit test suite, but the test fuzzing suite!
-Fuzzing randomizes the inputs of the test suite looking for breakdowns in the models.
