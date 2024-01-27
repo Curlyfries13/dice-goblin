@@ -13,8 +13,8 @@ describe('Simple Dice Group statistics', () => {
           const dice = new SimpleDiceGroup(sides, count);
 
           expect(dice.statProps.average).toBe((count * (sides + 1)) / 2);
-        }
-      )
+        },
+      ),
     );
   });
   it('calculates dice minimum correctly', () => {
@@ -28,8 +28,8 @@ describe('Simple Dice Group statistics', () => {
           const dice = new SimpleDiceGroup(sides, count);
 
           expect(dice.statProps.min).toBe(count);
-        }
-      )
+        },
+      ),
     );
   });
   it('calculates dice maximum correctly', () => {
@@ -43,8 +43,8 @@ describe('Simple Dice Group statistics', () => {
           const dice = new SimpleDiceGroup(sides, count);
 
           expect(dice.statProps.max).toBe(count * sides);
-        }
-      )
+        },
+      ),
     );
   });
 });

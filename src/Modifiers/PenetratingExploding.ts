@@ -137,12 +137,12 @@ export default class PenetratingExploding implements Modifier, DiceTerm {
         const left = new PenetratingExploding(
           new SimpleDiceGroup(this.base.sides.value(), 1),
           this.target,
-          this.compareMode
+          this.compareMode,
         );
         const right = new PenetratingExploding(
           new SimpleDiceGroup(this.base.sides.value(), this.base.count.value() - 1),
           this.target,
-          this.compareMode
+          this.compareMode,
         );
         return convolution(value, left, right, (x, y) => x - y);
       } else {

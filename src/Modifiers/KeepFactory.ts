@@ -1,7 +1,7 @@
 import Keep from './Keep';
 import { DiceTerm } from '../DiceTerm';
 import { StatisticalGenerator } from '../StatisticalGenerator';
-import { MagnitudeModifierFactory } from 'src/MagnitudeModifierFactory';
+import { MagnitudeModifierFactory } from '../MagnitudeModifierFactory';
 import KeepDropMode from './KeepDropMode';
 
 const KeepFactory: MagnitudeModifierFactory = (params: {

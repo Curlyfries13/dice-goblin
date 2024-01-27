@@ -41,7 +41,7 @@ export default class Keep implements Modifier {
   constructor(
     base: DiceTerm,
     keepQuantity: StatisticalGenerator = new Constant(1),
-    keepMode: KeepDropMode = KeepDropMode.High
+    keepMode: KeepDropMode = KeepDropMode.High,
   ) {
     this.base = base;
     this.keepQuantity = keepQuantity;

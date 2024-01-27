@@ -69,7 +69,7 @@ export class FudgeDiceGroup implements DiceTerm, StatisticalGenerator {
         results = results.concat(
           Array.apply(0, Array(BATCH_SIZE)).map(() => {
             return random.int(-1, 1);
-          })
+          }),
         );
         resultCount += BATCH_SIZE;
       } else {
@@ -77,7 +77,7 @@ export class FudgeDiceGroup implements DiceTerm, StatisticalGenerator {
         results = results.concat(
           Array.apply(0, Array(subBatchSize)).map(() => {
             return random.int(-1, 1);
-          })
+          }),
         );
       }
     }

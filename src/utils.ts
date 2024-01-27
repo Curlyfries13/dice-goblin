@@ -6,7 +6,7 @@ export function convolution(
   value: number,
   left: StatisticalGenerator,
   right: StatisticalGenerator,
-  inverse: (x: number, y: number) => number
+  inverse: (x: number, y: number) => number,
 ) {
   const rangeLeft = left.statProps.max - left.statProps.min + 1;
   let acc = 0;

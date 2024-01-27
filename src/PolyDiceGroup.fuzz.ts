@@ -16,8 +16,8 @@ describe('PolyDice Dice Group statistics', () => {
           const dice = new PolyDiceGroup(sidesGen, countGen);
 
           expect(dice.statProps.average).toBe((countGen.statProps.max * (sidesGen.statProps.max + 1)) / 2);
-        }
-      )
+        },
+      ),
     );
   });
   // NOTE: this really feels like an integration test
@@ -34,8 +34,8 @@ describe('PolyDice Dice Group statistics', () => {
           const dice = new PolyDiceGroup(sidesGen, countGen);
 
           expect(dice.statProps.min).toBe(count);
-        }
-      )
+        },
+      ),
     );
   });
   it('calculates dice maximum correctly', () => {
@@ -51,8 +51,8 @@ describe('PolyDice Dice Group statistics', () => {
           const dice = new PolyDiceGroup(sidesGen, countGen);
 
           expect(dice.statProps.max).toBe(count * sides);
-        }
-      )
+        },
+      ),
     );
   });
 });

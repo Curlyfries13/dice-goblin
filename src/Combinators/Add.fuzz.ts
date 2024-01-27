@@ -12,7 +12,7 @@ describe('Add modifier test', () => {
         const combination = new Add(termA, termB);
         expect(combination.statProps.min).toBe(valA + valB);
         expect(combination.statProps.max).toBe(valA + valB);
-      })
+      }),
     );
   });
 });

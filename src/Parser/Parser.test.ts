@@ -18,7 +18,7 @@ it.each(['1d6!', '2d6!<2', '3d8!2', '10d6!', '2d10dl1', '4d8k2', '5d6kh2', '6d8d
     const parseResult = parse(inputText);
     expect(parseResult.lexErrors).toHaveLength(0);
     expect(parseResult.parseErrors).toHaveLength(0);
-  }
+  },
 );
 
 it.each(['6d6d2', '4d8k3'])('should parse modifier expressions with magnitudes %p', (inputText) => {

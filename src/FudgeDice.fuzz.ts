@@ -8,7 +8,7 @@ describe('Fudge Dice Group', () => {
         const dice = new FudgeDiceGroup();
         // interestingly, the average roll on any fudge die is 0
         expect(dice.statProps.average).toBe(0);
-      })
+      }),
     );
     const dice = new FudgeDiceGroup();
   });

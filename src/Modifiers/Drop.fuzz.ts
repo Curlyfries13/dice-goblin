@@ -26,8 +26,8 @@ describe('Drop Modifier Fuzzing', () => {
           const drop = new Drop(baseDice, dropGen, lowHigh ? KeepDropMode.Low : KeepDropMode.High);
           drop.rollGroup();
           expect(drop.count.value()).toBe(countGen.value() - dropGen.value());
-        }
-      )
+        },
+      ),
     );
   });
   it('Drops fudge dice', () => {
@@ -42,8 +42,8 @@ describe('Drop Modifier Fuzzing', () => {
           const dropGen = new Constant(countDrop[1]);
           const baseDice = new FudgeDiceGroup(countDrop[0]);
           const drop = new Drop(baseDice, dropGen, lowHigh ? KeepDropMode.Low : KeepDropMode.High);
-        }
-      )
+        },
+      ),
     );
   });
 });

@@ -117,7 +117,7 @@ export default class RerollOnce implements Modifier, DiceTerm {
         const right = new RerollOnce(
           new SimpleDiceGroup(this.base.sides.value(), this.base.count.value() - 1),
           this.target,
-          this.compareMode
+          this.compareMode,
         );
         return convolution(value, left, right, (x, y) => x - y);
       } else {

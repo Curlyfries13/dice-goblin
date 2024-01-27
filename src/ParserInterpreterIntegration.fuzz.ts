@@ -20,8 +20,8 @@ describe('Parser-Interpreter integration tests', () => {
           const parseText = `${count}d${sides}${modifiers[index]}`;
           const parseResult = parseDice(parseText);
           expect(isModifier(parseResult)).toBe(true);
-        }
-      )
+        },
+      ),
     );
   });
   it('it parses magnitude modifiers correctly', () => {
@@ -42,8 +42,8 @@ describe('Parser-Interpreter integration tests', () => {
           const parseText = `${count}d${sides}${modifiers[mod]}${magnitude}`;
           const parseResult = parseDice(parseText);
           expect(isModifier(parseResult)).toBe(true);
-        }
-      )
+        },
+      ),
     );
   });
   it('it parses target modifiers correctly', () => {
@@ -66,8 +66,8 @@ describe('Parser-Interpreter integration tests', () => {
           const parseText = `${count}d${sides}${modifiers[mod]}${comparison[comp]}${target}`;
           const parseResult = parseDice(parseText);
           expect(isModifier(parseResult)).toBe(true);
-        }
-      )
+        },
+      ),
     );
   });
 });

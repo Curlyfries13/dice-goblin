@@ -43,7 +43,7 @@ export default class Drop implements Modifier {
   constructor(
     base: DiceTerm,
     dropQuantity: StatisticalGenerator = new Constant(1),
-    dropMode: KeepDropMode = KeepDropMode.Low
+    dropMode: KeepDropMode = KeepDropMode.Low,
   ) {
     this.base = base;
     this.dropQuantity = dropQuantity;

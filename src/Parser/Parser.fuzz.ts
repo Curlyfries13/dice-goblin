@@ -14,8 +14,8 @@ describe('simple dice rolls', () => {
           const parseResult = parse(parseText);
           expect(parseResult.lexErrors).toHaveLength(0);
           expect(parseResult.parseErrors).toHaveLength(0);
-        }
-      )
+        },
+      ),
     );
   });
   it('parses fudge dice', () => {
@@ -28,8 +28,8 @@ describe('simple dice rolls', () => {
           const parseResult = parse(parseText);
           expect(parseResult.lexErrors).toHaveLength(0);
           expect(parseResult.parseErrors).toHaveLength(0);
-        }
-      )
+        },
+      ),
     );
   });
   it('parses simple dice expressions', () => {
@@ -58,8 +58,8 @@ describe('simple dice rolls', () => {
           const parseResult = parse(parseText);
           expect(parseResult.lexErrors).toHaveLength(0);
           expect(parseResult.parseErrors).toHaveLength(0);
-        }
-      )
+        },
+      ),
     );
   });
   it('parses simple modifier expressions', () => {
@@ -76,8 +76,8 @@ describe('simple dice rolls', () => {
           const parseResult = parse(parseText);
           expect(parseResult.lexErrors).toHaveLength(0);
           expect(parseResult.parseErrors).toHaveLength(0);
-        }
-      )
+        },
+      ),
     );
   });
   it('parses magnitude modifiers with values', () => {
@@ -99,8 +99,8 @@ describe('simple dice rolls', () => {
           const parseResult = parse(parseText);
           expect(parseResult.lexErrors).toHaveLength(0);
           expect(parseResult.parseErrors).toHaveLength(0);
-        }
-      )
+        },
+      ),
     );
   });
   it('parses target modifiers with values', () => {
@@ -124,8 +124,8 @@ describe('simple dice rolls', () => {
           const parseResult = parse(parseText);
           expect(parseResult.lexErrors).toHaveLength(0);
           expect(parseResult.parseErrors).toHaveLength(0);
-        }
-      )
+        },
+      ),
     );
   });
 });

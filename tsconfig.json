@@ -1,16 +1,12 @@
 {
   "compilerOptions": {
-    "target": "es2016",
+    "target": "es2015",
     "module": "commonjs",
-    "sourceMap": true,
-    "esModuleInterop": true,
-    "forceConsistentCasingInFileNames": true,
     "strict": true,
+    "esModuleInterop": true,
     "skipLibCheck": true,
-    "outDir": "dist",
-    "baseUrl": ".",
-    // "noUncheckedIndexedAccess": true, // TODO: add this to tighten up the type checker
-    "noEmit": true
+    "forceConsistentCasingInFileNames": true,
   },
-  "exclude": ["src/debug/*"]
+  "$schema": "https://json.schemastore.org/tsconfig",
+  "display": "Recommended",
 }

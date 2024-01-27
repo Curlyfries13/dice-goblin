@@ -13,7 +13,7 @@ function testStats(roll: () => number, repeats = 10000, name = '') {
       results = results.concat(
         Array.apply(0, Array(BATCH_SIZE)).map(() => {
           return roll();
-        })
+        }),
       );
       resultCount += BATCH_SIZE;
     } else {
@@ -21,7 +21,7 @@ function testStats(roll: () => number, repeats = 10000, name = '') {
       results = results.concat(
         Array.apply(0, Array(subBatchSize)).map(() => {
           return roll();
-        })
+        }),
       );
     }
   }
