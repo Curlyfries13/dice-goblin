@@ -1,7 +1,7 @@
 import { CONVOLUTION_EPSILON } from './EngineConfig';
 import { StatisticalGenerator } from './StatisticalGenerator';
 
-// TODO: memoize this
+// TODO: memoize this? This can be a big performance win
 export function convolution(
   value: number,
   left: StatisticalGenerator,

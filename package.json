@@ -5,7 +5,9 @@
   "main": "dist/index.js",
   "module": "dist/index.mjs",
   "typings": "dist/index.d.ts",
-  "files": ["dist"],
+  "files": [
+    "dist"
+  ],
   "engines": {
     "node": ">=20.11.0"
   },
@@ -18,36 +20,41 @@
     "spell": "cspell src/**/*.ts",
     "spell:fix": "cspell",
     "test": "NODE_OPTIONS=--experimental-vm-modules jest",
-    "prepare": "husky install"
+    "prepare": "husky"
   },
-  "keywords": ["dice", "rng", "random", "parsing"],
+  "keywords": [
+    "dice",
+    "rng",
+    "random",
+    "parsing"
+  ],
   "author": "Jon Yocky",
   "license": "MIT",
   "devDependencies": {
     "@types/cli-progress": "^3.11.5",
-    "@types/jest": "^29.5.11",
-    "@types/node": "^20.11.5",
+    "@types/jest": "^29.5.12",
+    "@types/node": "^20.14.2",
     "@types/seedrandom": "^3.0.8",
-    "@typescript-eslint/eslint-plugin": "^6.19.0",
-    "@typescript-eslint/parser": "^6.19.0",
+    "@typescript-eslint/eslint-plugin": "^7.13.0",
+    "@typescript-eslint/parser": "^7.13.0",
     "cli-progress": "^3.12.0",
-    "cspell": "^8.3.2",
-    "csv": "^6.3.6",
-    "eslint": "^8.56.0",
+    "cspell": "^8.8.4",
+    "csv": "^6.3.9",
+    "eslint": "^8.57.0",
     "eslint-config-airbnb-base": "^15.0.0",
-    "eslint-config-airbnb-typescript": "^17.1.0",
+    "eslint-config-airbnb-typescript": "^18.0.0",
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-import": "^2.29.1",
-    "fast-check": "^3.15.0",
-    "husky": "^8.0.3",
+    "fast-check": "^3.19.0",
+    "husky": "^9.0.11",
     "jest": "^29.7.0",
-    "lint-staged": "^15.2.0",
-    "prettier": "^3.2.4",
+    "lint-staged": "^15.2.7",
+    "prettier": "^3.3.2",
     "simple-statistics": "^7.8.3",
-    "ts-jest": "^29.1.2",
+    "ts-jest": "^29.1.4",
     "ts-node": "^10.9.2",
-    "tsup": "^8.0.1",
-    "typescript": "^5.3.3"
+    "tsup": "^8.1.0",
+    "typescript": "^5.4.5"
   },
   "dependencies": {
     "chevrotain": "^11.0.3",

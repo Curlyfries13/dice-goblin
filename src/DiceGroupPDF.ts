@@ -33,7 +33,7 @@ function subSum(index: number, diceCount: number, sides: number, total: number):
 let f = factorialData;
 function factorial(n: number) {
   if (f[n] !== undefined) {
-    // cheat with memoization
+    // TODO: cheat with memoization
     return f[n];
   }
   let result = f.slice(-1)[0];
