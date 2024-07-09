@@ -26,3 +26,8 @@ it.each(['6d6d2', '4d8k3'])('should parse modifier expressions with magnitudes %
   expect(parseResult.lexErrors).toHaveLength(0);
   expect(parseResult.parseErrors).toHaveLength(0);
 });
+
+it.each(['1k2', '(2d6)k1'])('should have lexErrors on incorrect pattern: %p', (inputText) => {
+  const parseResult = parse(inputText);
+  expect(parseResult.lexErrors.length).toBeGreaterThan(0);
+});

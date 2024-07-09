@@ -1,7 +1,7 @@
 import factorialData from './factorial_data';
 
 // assumes no modifiers
-// TODO cheat with memoization
+// TODO: cheat with memoization
 export function dicePDF(diceCount: number, sides: number, total: number) {
   // check how bad it'll get
   let maxVal = diceCount * sides;
@@ -10,7 +10,7 @@ export function dicePDF(diceCount: number, sides: number, total: number) {
   }
   const max = Math.floor((total - diceCount) / sides) + 1;
   // TODO: avoid call stack limit
-  console.log(`calculate up to ${max}`);
+  // console.log(`calculate up to ${max}`);
   const value = Array(max)
     .fill(0)
     .map((_, i) => subSum(i, diceCount, sides, total))
@@ -26,7 +26,7 @@ function subSum(index: number, diceCount: number, sides: number, total: number):
   const ca = factorial(total - sides * index - 1);
   const cb = factorial(total - sides * index - diceCount);
   const cc = factorial(diceCount - 1);
-  console.log(`${sign}, ${b}, ${ca}, ${cb}, ${cc}`);
+  // console.log(`${sign}, ${b}, ${ca}, ${cb}, ${cc}`);
   return Number(sign * b * (ca / (cb * cc)));
 }
 

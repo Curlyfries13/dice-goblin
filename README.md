@@ -30,6 +30,23 @@ This provides a parser and dice engine, and can be used to both analyze dice rol
 - Robust Dice parser
 - Statistical modeling for most dice
 
+## Testing & Dev scripts
+
+Unit tests and fuzz tests can be run with the `test` and `test:fuzz` scripts respectively
+
+```shell
+pnpm test
+
+pnpm test:fuzz
+```
+
+This repository works well with tsx to run ad-hoc Typescript files
+
+```shell
+# Run a bunch of tests to validate the statistical correctness of the system
+pnpm tsx src/ProbabilityChecker.ts
+```
+
 ## Contributing
 
 Dice Goblin is under active development; collaboration guidelines and more details on how to help out are on the way!

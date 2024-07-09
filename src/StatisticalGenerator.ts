@@ -2,6 +2,8 @@
  * A Statistical Generator has a generator with well defined statistical properties.
  */
 
+import { StatProps } from './StatProps';
+
 export interface StatisticalGenerator {
   value: () => number;
 
@@ -10,10 +12,5 @@ export interface StatisticalGenerator {
   // TODO (BIG) consider whether or not a values generator is a good idea
   // values: Generator<number, void, unknown>;
 
-  statProps: {
-    min: number;
-    max: number;
-    periodicity: number;
-    average: number;
-  };
+  statProps: StatProps;
 }

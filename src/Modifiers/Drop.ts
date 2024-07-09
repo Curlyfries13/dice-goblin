@@ -56,8 +56,6 @@ export default class Drop implements Modifier {
     this.count = new Constant(base.count.statProps.average - dropQuantity.statProps.average);
 
     this.statProps = {
-      // NOTE: this property can change when rolled
-      // these properties do not change...
       // TODO: re-evaluate the minimum if the minimum for a die is not 1, or if
       // there is an unknown setup which could lead to strangeness here
       min: base.statProps.min - 1 * dropQuantity.statProps.max,
@@ -65,12 +63,19 @@ export default class Drop implements Modifier {
       max: base.statProps.max - base.sides.statProps.max * dropQuantity.statProps.min,
       // TODO: correctly calculate the average for this system
       average: base.statProps.average,
+      // NOTE: we expect the periodicity to be transitive
       periodicity: base.statProps.periodicity,
     };
     this.value = this.roll;
     // TODO: fully implement the PDF function for modifiers
     this.pdf = (value: number) => this.base.pdf(value);
   }
+
+  // use simple statistics if dropping from a mono-type
+  // e.g. 3d6, or 4d6,
+  //
+  // NOTE: _not_ tested for poly dice or groups
+  simpleStatistics() {}
 
   roll(): number {
     return this.rollGroup()[0];

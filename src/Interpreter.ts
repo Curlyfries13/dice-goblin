@@ -1,8 +1,11 @@
+import { CstNode, ILexingError, IRecognitionException } from 'chevrotain';
+
 import { Constant } from './Constant';
 import { FudgeDiceGroup } from './FudgeDice';
 import CompareMode from './CompareMode';
-
 import { DieParser } from './Parser/Parser';
+import { PolyDiceGroup } from './PolyDiceGroup';
+
 import ExplodingFactory from './Modifiers/ExplodingFactory';
 import CompoundingExplodingFactory from './Modifiers/CompoundingExplodingFactory';
 import PenetratingExplodingFactory from './Modifiers/PenetratingExplodingFactory';
@@ -12,11 +15,9 @@ import KeepFactory from './Modifiers/KeepFactory';
 import DropFactory from './Modifiers/DropFactory';
 import KeepDropMode from './Modifiers/KeepDropMode';
 
-import Add from './Combinators/Add';
-
 import { StatisticalGenerator } from './StatisticalGenerator';
 import { DiceTerm } from './DiceTerm';
-import { PolyDiceGroup } from './PolyDiceGroup';
+import Add from './Combinators/Add';
 import Subtract from './Combinators/Subtract';
 import Divide from './Combinators/Divide';
 import Modulo from './Combinators/Modulo';
@@ -40,6 +41,9 @@ class DieToAstVisitor extends BaseDiceVisitor {
     super();
     this.validateVisitor();
   }
+
+  // Silence the TS compiler
+  // TODO: it may be possible to fix the typing from the visit method using chevrotain.
 
   expression(ctx: any) {
     // an expression is represented by a "roll" which is a series of expressions
@@ -132,7 +136,6 @@ class DieToAstVisitor extends BaseDiceVisitor {
 
   // give me a function that takes a base
   modifier(ctx: any): ModifierFactory {
-    let out;
     let factory: TargetModifierFactory | MagnitudeModifierFactory;
     let compare: CompareMode = CompareMode.Equal;
     let kdMode: KeepDropMode | undefined;
@@ -157,7 +160,7 @@ class DieToAstVisitor extends BaseDiceVisitor {
     if (ctx.comparison_target) {
       statGen = this.visit(ctx.comparison_target);
     }
-    out = ({ base }: { base: DiceTerm }): Modifier => {
+    const out = ({ base }: { base: DiceTerm }): Modifier => {
       if (isMagnitude) {
         const resolved: MagnitudeModifierFactory = factory as MagnitudeModifierFactory;
         return resolved({

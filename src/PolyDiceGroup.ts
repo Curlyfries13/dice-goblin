@@ -34,7 +34,7 @@ export class PolyDiceGroup implements DiceTerm, StatisticalGenerator {
       min: count.statProps.min,
       max: count.statProps.max * sides.statProps.max,
       // as a safety precaution, set periodicity to is maximum value
-      // TODO Consider moving this into a variable for more readability around line 80
+      // TODO: Consider moving this into a variable for more readability around line 80
       periodicity: sides.statProps.max,
       // TODO: verify that this is true
       average: ((1 + sides.statProps.average) / 2.0) * count.statProps.average,
@@ -65,11 +65,6 @@ export class PolyDiceGroup implements DiceTerm, StatisticalGenerator {
       for (let i = 0; i < countRange; i++) {
         for (let j = 0; j < sidesRange; j++) {
           // calculate the probability for this combination
-          console.log(
-            `dicePdF(${count.statProps.min + i}, ${sides.statProps.min + j}, ${value}) * ${countProb[i]} * ${
-              sidesProb[j]
-            }`,
-          );
           acc += dicePDF(count.statProps.min + i, sides.statProps.min + j, value) * countProb[i] * sidesProb[j];
         }
       }

@@ -1,4 +1,5 @@
 import { StatisticalGenerator } from './StatisticalGenerator';
+import { StatProps } from './StatProps';
 
 /**
  * A Term is a distinct part of a Dice expression.
@@ -22,15 +23,4 @@ export interface Term extends StatisticalGenerator {
   // If this dice term has a number of dice, then this should contain that
   // count.
   current: number[];
-
-  // organize the term's statistical properties in a sub object to make tree-ing
-  // easier, and quiet the TS engine
-  // TODO: add percentile stats
-  statProps: {
-    average: number;
-    min: number;
-    max: number;
-    [key: string]: any;
-    periodicity: number;
-  };
 }
