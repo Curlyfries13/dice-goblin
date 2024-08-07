@@ -51,7 +51,7 @@ export default class RerollOnce implements Modifier, DiceTerm {
     // Do not copy the base values: this causes weirdness when you try to modify their properties
     this.count = {
       value: () => {
-        return this.current.length - 1;
+        return this.base.count.statProps.average - 1;
       },
       // these properties are almost certainly not helpful
       combinatoricMagnitude: this.base.combinatoricMagnitude,

@@ -68,7 +68,6 @@ export function binomialCoefficient(n: number, k: number): number {
   let result = 1;
   // exploit the symmetry of this result
   const limit = k <= n - k ? k : n - k;
-  // console.log(`requested (${n}, ${k}), providing(${n}, ${limit})`);
   for (let i = 1; i <= limit; i++) {
     const subResult = (n + 1 - i) / i;
     // this feels like a hack
@@ -102,7 +101,6 @@ export function multinomialCoefficient(diceCount: number, sides: number, total: 
     const sign = i & 1 ? -1 : 1;
     const a = binomialCoefficient(diceCount, i);
     const b = binomialCoefficient(total - sides * i - 1, diceCount - 1);
-    console.log(`multinomial ${i}: ${sign}, ${a}, ${b}`);
     result = result + sign * a * b;
   }
 

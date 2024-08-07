@@ -7,7 +7,6 @@ export function diceMultinomial(diceCount: number, sides: number, total: number)
   }
   const max = Math.floor((total - diceCount) / sides) + 1;
   // TODO: avoid call stack limit
-  // console.log(`calculate up to ${max}`);
   return Array(max)
     .fill(0)
     .map((_, i) => subSum(i, diceCount, sides, total))
