@@ -1,6 +1,6 @@
 import { Combinator, CombinatorGenerator } from '../Combinator';
 import { StatisticalGenerator } from '../StatisticalGenerator';
-import { convolution } from '../utils';
+import { pdfConvolution } from '../utils';
 // TODO: I'm not a fan of relative imports, I'd like to fix the typescript config
 
 /*
@@ -18,8 +18,10 @@ export default class Add implements Combinator {
     periodicity: number;
     average: number;
   };
+  combinatoricMagnitude: number;
   inverse: (x: number, y: number) => number;
   pdf: (value: number) => number;
+  multinomial: (value: number) => number;
 
   constructor(left: StatisticalGenerator, right: StatisticalGenerator) {
     this.left = left;
@@ -31,11 +33,25 @@ export default class Add implements Combinator {
       average: left.statProps.average + right.statProps.average,
     };
     this.value = this.apply;
+    this.combinatoricMagnitude = left.combinatoricMagnitude * right.combinatoricMagnitude;
     this.inverse = (x: number, y: number) => {
       return x - y;
     };
+    // TODO: determine if pdf here is more efficient, or multinomial is more efficient
     this.pdf = (value: number) => {
-      return convolution(value, left, right, this.inverse);
+      return pdfConvolution(value, left, right, this.inverse);
+    };
+    // TODO: determine if there's an efficient way to get this info
+    this.multinomial = (value: number) => {
+      let acc = 0;
+      for (let i = left.statProps.min; i <= left.statProps.max; i++) {
+        for (let j = right.statProps.min; j <= right.statProps.max; j++) {
+          if (i + j === value) {
+            acc += left.multinomial(i) * right.multinomial(j);
+          }
+        }
+      }
+      return acc;
     };
   }
 

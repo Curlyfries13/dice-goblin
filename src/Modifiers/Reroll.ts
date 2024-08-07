@@ -4,7 +4,7 @@ import { SimpleDiceGroup } from '../SimpleDiceGroup';
 import { DiceTerm } from '../DiceTerm';
 import { StatisticalGenerator } from '../StatisticalGenerator';
 import { Constant } from '../Constant';
-import { convolution } from '../utils';
+import { pdfConvolution } from '../utils';
 /*
  * The Reroll Modifier adds additional logic to the dice. Essentially, they
  * prevent specific values from surfacing.
@@ -29,10 +29,12 @@ export default class Reroll implements Modifier, DiceTerm {
     average: number;
     periodicity: number;
   };
+  combinatoricMagnitude: number;
   current: number[];
   reroller: StatisticalGenerator;
   value: () => number;
   pdf: (value: number) => number;
+  multinomial: (value: number) => number;
 
   // these members are only for reroll
   // this represents the total number of values which are possible
@@ -55,6 +57,7 @@ export default class Reroll implements Modifier, DiceTerm {
       value: () => {
         return this.current.length - 1;
       },
+      combinatoricMagnitude: this.base.combinatoricMagnitude,
       statProps: {
         min: this.base.statProps.min,
         max: this.base.statProps.max,
@@ -63,6 +66,9 @@ export default class Reroll implements Modifier, DiceTerm {
       },
       pdf: (value: number) => {
         return this.base.pdf(value);
+      },
+      multinomial: (value: number) => {
+        return this.base.multinomial(value);
       },
     };
     let newMin = base.statProps.min;
@@ -83,6 +89,8 @@ export default class Reroll implements Modifier, DiceTerm {
         newMax = base.statProps.max - 1;
       }
     }
+    // TODO: implement this
+    this.combinatoricMagnitude = this.base.combinatoricMagnitude;
     this.statProps = {
       min: newMin,
       max: newMax,
@@ -133,12 +141,16 @@ export default class Reroll implements Modifier, DiceTerm {
           this.target,
           this.compareMode,
         );
-        return convolution(value, left, right, (x, y) => x - y);
+        return pdfConvolution(value, left, right, (x, y) => x - y);
       } else {
         // give up
         // TODO: implement PDF for non-constant dice
         return this.base.pdf(value);
       }
+    };
+    // TODO: implement multinomial for this
+    this.multinomial = (value: number) => {
+      return this.base.multinomial(value);
     };
   }
 

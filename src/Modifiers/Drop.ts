@@ -34,9 +34,11 @@ export default class Drop implements Modifier {
     average: number;
     periodicity: number;
   };
+  combinatoricMagnitude: number;
   current: number[];
   value: () => number;
   pdf: (value: number) => number;
+  multinomial: (value: number) => number;
 
   // TODO add exceptions in the following case(s)
   // 1) the drop number == the number of dice
@@ -54,6 +56,9 @@ export default class Drop implements Modifier {
     this.sides = base.sides;
     // NOTE: this could lead to weirdness
     this.count = new Constant(base.count.statProps.average - dropQuantity.statProps.average);
+    // NOTE: interesting effect: dropping dice doesn't change the number of combinations.
+    // this _should_ be correct
+    this.combinatoricMagnitude = Math.pow(base.sides.statProps.average, base.count.statProps.average);
 
     this.statProps = {
       // TODO: re-evaluate the minimum if the minimum for a die is not 1, or if
@@ -69,6 +74,8 @@ export default class Drop implements Modifier {
     this.value = this.roll;
     // TODO: fully implement the PDF function for modifiers
     this.pdf = (value: number) => this.base.pdf(value);
+    // TODO: fully implement the multinomial function for modifier: use dynamic programming
+    this.multinomial = (value: number) => this.base.pdf(value);
   }
 
   // use simple statistics if dropping from a mono-type

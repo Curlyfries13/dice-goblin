@@ -18,8 +18,10 @@ export class ConstantDiceGroup implements DiceTerm {
     average: number;
     periodicity: number;
   };
+  combinatoricMagnitude: number;
   value: () => number;
   pdf: (value: number) => number;
+  multinomial: (value: number) => number;
   current: number[];
   results: number[];
 
@@ -41,10 +43,17 @@ export class ConstantDiceGroup implements DiceTerm {
       average: sum,
       periodicity: sum,
     };
+    this.combinatoricMagnitude = 1;
 
     this.current = [sum].concat(this.results);
     this.value = this.roll;
     this.pdf = (value: number) => {
+      if (value === this.current[0]) {
+        return 1;
+      }
+      return 0;
+    };
+    this.multinomial = (value: number) => {
       if (value === this.current[0]) {
         return 1;
       }

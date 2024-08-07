@@ -5,7 +5,7 @@ import { DiceTerm } from '../DiceTerm';
 import { StatisticalGenerator } from '../StatisticalGenerator';
 import { Constant } from '../Constant';
 import Subtract from '../Combinators/Subtract';
-import { convolution } from '../utils';
+import { pdfConvolution } from '../utils';
 
 /*
  * The Exploding modifier adds additional logic to continue rolling
@@ -31,6 +31,7 @@ export default class PenetratingExploding implements Modifier, DiceTerm {
     average: number;
     periodicity: number;
   };
+  combinatoricMagnitude: number;
   current: number[];
   reroller: StatisticalGenerator;
   // exploder only props
@@ -38,6 +39,7 @@ export default class PenetratingExploding implements Modifier, DiceTerm {
   explosionProbability: number;
   value: () => number;
   pdf: (value: number) => number;
+  multinomial: (value: number) => number;
 
   // thresholdFuncGenerator: (isPenetrating: boolean) => (value: number) => boolean;
 
@@ -68,8 +70,14 @@ export default class PenetratingExploding implements Modifier, DiceTerm {
         average: this.base.count.statProps.average,
         periodicity: this.base.sides.statProps.max,
       },
+      // this should be correct
+      combinatoricMagnitude: Infinity,
+      // TODO: actually calculate these properties
       pdf: (value: number) => {
         return this.base.pdf(value);
+      },
+      multinomial: (value: number) => {
+        return this.base.multinomial(value);
       },
     };
     // NOTE: this property can change when rolled
@@ -96,6 +104,7 @@ export default class PenetratingExploding implements Modifier, DiceTerm {
     } else {
       probabilityMultiplier = this.sides.statProps.average / (this.target.statProps.average - 1);
     }
+    this.combinatoricMagnitude = Infinity;
     this.statProps = {
       // TODO: this property can change if the explosion target includes the
       // minimum value
@@ -144,12 +153,14 @@ export default class PenetratingExploding implements Modifier, DiceTerm {
           this.target,
           this.compareMode,
         );
-        return convolution(value, left, right, (x, y) => x - y);
+        return pdfConvolution(value, left, right, (x, y) => x - y);
       } else {
         // give up
         return this.base.pdf(value);
       }
     };
+    // TODO: fully implement multinomial for this
+    this.multinomial = (value: number) => this.base.multinomial(value);
   }
   // because we filter in 2 different states, we sorta have to generate the threshold function
   // I don't really like this because it means we have to build 2 functions every time we roll, rather than just 1

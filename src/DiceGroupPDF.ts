@@ -1,9 +1,6 @@
 import factorialData from './factorial_data';
 
-// assumes no modifiers
-// TODO: cheat with memoization
-export function dicePDF(diceCount: number, sides: number, total: number) {
-  // check how bad it'll get
+export function diceMultinomial(diceCount: number, sides: number, total: number) {
   let maxVal = diceCount * sides;
   if (total > maxVal || total < 1) {
     return 0.0;
@@ -11,14 +8,21 @@ export function dicePDF(diceCount: number, sides: number, total: number) {
   const max = Math.floor((total - diceCount) / sides) + 1;
   // TODO: avoid call stack limit
   // console.log(`calculate up to ${max}`);
-  const value = Array(max)
+  return Array(max)
     .fill(0)
     .map((_, i) => subSum(i, diceCount, sides, total))
     .reduce((value, current) => value + current, 0);
-  return value * Math.pow(1.0 / sides, diceCount);
+}
+
+// assumes no modifiers
+// TODO: cheat with memoization
+export function dicePDF(diceCount: number, sides: number, total: number) {
+  return diceMultinomial(diceCount, sides, total) * Math.pow(1.0 / sides, diceCount);
 }
 
 // This shouldn't need BigInt... but if it does this could need more help
+// the derivation for this:
+// https://towardsdatascience.com/modelling-the-probability-distributions-of-dice-b6ecf87b24ea
 function subSum(index: number, diceCount: number, sides: number, total: number): number {
   // unfortunately this requires a BigInt to just hold + / - 1
   const sign = BigInt(index & 1 ? -1 : 1);
@@ -26,8 +30,8 @@ function subSum(index: number, diceCount: number, sides: number, total: number):
   const ca = factorial(total - sides * index - 1);
   const cb = factorial(total - sides * index - diceCount);
   const cc = factorial(diceCount - 1);
-  // console.log(`${sign}, ${b}, ${ca}, ${cb}, ${cc}`);
-  return Number(sign * b * (ca / (cb * cc)));
+  const c = ca / (cb * cc);
+  return Number(sign * b * c);
 }
 
 let f = factorialData;

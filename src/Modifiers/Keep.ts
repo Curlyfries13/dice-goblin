@@ -22,6 +22,7 @@ export default class Keep implements Modifier {
   sides: StatisticalGenerator;
   count: StatisticalGenerator;
 
+  combinatoricMagnitude: number;
   statProps: {
     min: number;
     max: number;
@@ -31,6 +32,7 @@ export default class Keep implements Modifier {
   current: number[];
   value: () => number;
   pdf: (value: number) => number;
+  multinomial: (value: number) => number;
 
   // NOTE this is the same as dropping, but in the reciprocal
   // TODO add a group that handles groups of dice and allows keeping / dropping
@@ -51,6 +53,7 @@ export default class Keep implements Modifier {
     this.current = [];
     this.sides = base.sides;
     this.count = keepQuantity;
+    this.combinatoricMagnitude = Math.pow(base.sides.statProps.average, base.count.statProps.average);
 
     // NOTE: this property can change when rolled
     this.statProps = {
@@ -66,6 +69,8 @@ export default class Keep implements Modifier {
     this.value = this.roll;
     // TODO: fully implement the PDF function for modifiers
     this.pdf = (value: number) => this.base.pdf(value);
+    // TODO: fully implement the multinomial function for modifier: use dynamic programming
+    this.multinomial = (value: number) => this.base.pdf(value);
   }
 
   roll(): number {

@@ -4,7 +4,7 @@ import { SimpleDiceGroup } from '../SimpleDiceGroup';
 import { DiceTerm } from '../DiceTerm';
 import { StatisticalGenerator } from '../StatisticalGenerator';
 import { Constant } from '../Constant';
-import { convolution } from '../utils';
+import { pdfConvolution } from '../utils';
 
 /*
  * The Reroll Once Modifier adds additional logic to the dice. Essentially, they
@@ -28,10 +28,12 @@ export default class RerollOnce implements Modifier, DiceTerm {
     average: number;
     periodicity: number;
   };
+  combinatoricMagnitude: number;
   current: number[];
   reroller: StatisticalGenerator;
   value: () => number;
   pdf: (value: number) => number;
+  multinomial: (value: number) => number;
 
   rerollCount: number;
   // this value allows
@@ -52,6 +54,7 @@ export default class RerollOnce implements Modifier, DiceTerm {
         return this.current.length - 1;
       },
       // these properties are almost certainly not helpful
+      combinatoricMagnitude: this.base.combinatoricMagnitude,
       statProps: {
         min: this.base.statProps.min,
         max: this.base.statProps.max,
@@ -60,6 +63,9 @@ export default class RerollOnce implements Modifier, DiceTerm {
       },
       pdf: (value: number) => {
         return this.base.pdf(value);
+      },
+      multinomial: (value: number) => {
+        return this.base.multinomial(value);
       },
     };
     // TODO: consolidate naming, this is similar for reroll. Maybe need to make
@@ -77,8 +83,10 @@ export default class RerollOnce implements Modifier, DiceTerm {
       this.rerollRange = this.sides.statProps.average - this.target.statProps.average + 1;
       averageMod = numerator <= 0 ? 0 : -1 * (numerator / denominator);
     }
-    // TODO: get the value of a dice roll targeting a specific number (average)
 
+    // TODO: implement this
+    this.combinatoricMagnitude = this.base.combinatoricMagnitude;
+    // TODO: get the value of a dice roll targeting a specific number (average)
     this.statProps = {
       min: base.statProps.min,
       max: base.statProps.max,
@@ -119,13 +127,15 @@ export default class RerollOnce implements Modifier, DiceTerm {
           this.target,
           this.compareMode,
         );
-        return convolution(value, left, right, (x, y) => x - y);
+        return pdfConvolution(value, left, right, (x, y) => x - y);
       } else {
         // give up
         // TODO: implement PDF for non-constant dice
         return this.base.pdf(value);
       }
     };
+    // TODO: implement this
+    this.multinomial = (value: number) => this.base.multinomial(value);
   }
 
   thresholdFunc = (value: number): boolean => {

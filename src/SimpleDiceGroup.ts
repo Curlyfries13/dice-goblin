@@ -5,7 +5,7 @@ import { BATCH_SIZE } from './EngineConfig';
 import { Constant } from './Constant';
 import { DiceTerm } from './DiceTerm';
 import { StatisticalGenerator } from './StatisticalGenerator';
-import { dicePDF } from './DiceGroupPDF';
+import { multinomialCoefficient, multinomialPDF } from './utils';
 
 /**
  * A dice group is a single type of Dice, e.g. a six-sided dice
@@ -26,15 +26,18 @@ export class SimpleDiceGroup implements DiceTerm, StatisticalGenerator {
     periodicity: number;
     average: number;
   };
+  combinatoricMagnitude: number;
   seed: undefined | seedrandom;
   current: number[];
   // placeholder
   value: () => number;
   pdf: (value: number) => number;
+  multinomial: (value: number) => number;
 
   constructor(sides: number = 6, count: number = 1, seed?: PRNG) {
     this.sides = new Constant(sides);
     this.count = new Constant(count);
+    this.combinatoricMagnitude = Math.pow(sides, count);
     this.statProps = {
       // this die engine always uses a minimum value of 1
       // Note this acts strangely if the number of sides is 0. In this case an
@@ -49,7 +52,8 @@ export class SimpleDiceGroup implements DiceTerm, StatisticalGenerator {
     if (seed !== undefined) random.use(seed as unknown as RNG);
     this.current = [count].concat(Array(count).fill(1));
     this.value = this.roll;
-    this.pdf = (value: number) => dicePDF(this.count.value(), this.sides.value(), value);
+    this.pdf = (value: number) => multinomialPDF(this.count.value(), this.sides.value(), value);
+    this.multinomial = (value: number) => multinomialCoefficient(this.count.value(), this.sides.value(), value);
   }
 
   // Roll this group and return the result

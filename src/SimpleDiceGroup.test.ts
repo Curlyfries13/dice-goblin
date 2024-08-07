@@ -6,7 +6,7 @@ it('should initialize a six sided dice by default', () => {
   expect(dice.sides.value()).toBe(6);
 });
 
-describe.each([
+it.each([
   [6, 3, 3, 18, 10.5],
   [10, 2, 2, 20, 11],
   [4, 10, 10, 40, 25],
@@ -23,3 +23,11 @@ it('should behave predictably with a provided seed', () => {
   const dice = new SimpleDiceGroup(6, 3, rng);
   expect(dice.roll()).toMatchSnapshot();
 });
+
+it.each([[3, 6, 3, 1]])(
+  'should generate correct combinatoric data: (%pd%p)(%p) = %p',
+  (count, sides, value, expected) => {
+    const dice = new SimpleDiceGroup(sides, count);
+    expect(dice.multinomial(value)).toBe(expected);
+  },
+);

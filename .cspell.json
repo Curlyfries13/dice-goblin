@@ -1,5 +1,16 @@
 {
   "language": "en",
   "ignorePaths": ["/src/debug/*"],
-  "words": ["Yocky", "seedrandom", "combaintor", "convolution", "combinators", "parameterless", "reroller", "Maclauren"]
+  "words": [
+    "Yocky",
+    "Maclauren",
+    "combaintor",
+    "combinatoric",
+    "combinators",
+    "convolution",
+    "multinomial",
+    "parameterless",
+    "reroller",
+    "seedrandom"
+  ]
 }

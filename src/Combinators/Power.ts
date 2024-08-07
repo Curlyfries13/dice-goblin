@@ -1,6 +1,6 @@
 import { Combinator, CombinatorGenerator } from '../Combinator';
 import { StatisticalGenerator } from '../StatisticalGenerator';
-import { convolution } from '../utils';
+import { multinomialConvolution, pdfConvolution } from '../utils';
 
 export default class Power implements Combinator {
   name = 'multiply';
@@ -13,12 +13,15 @@ export default class Power implements Combinator {
     average: number;
     periodicity: number;
   };
+  combinatoricMagnitude: number;
   inverse: (x: number, y: number) => number;
   pdf: (value: number) => number;
+  multinomial: (value: number) => number;
 
   constructor(left: StatisticalGenerator, right: StatisticalGenerator) {
     this.left = left;
     this.right = right;
+    this.combinatoricMagnitude = left.combinatoricMagnitude * right.combinatoricMagnitude;
     this.statProps = {
       min: Math.pow(left.statProps.min, right.statProps.min),
       max: Math.pow(left.statProps.max, right.statProps.max),
@@ -32,7 +35,10 @@ export default class Power implements Combinator {
       return Math.pow(x, 1.0 / y);
     };
     this.pdf = (value: number) => {
-      return convolution(value, left, right, this.inverse);
+      return pdfConvolution(value, left, right, this.inverse);
+    };
+    this.multinomial = (value: number) => {
+      return multinomialConvolution(value, left, right, this.inverse);
     };
   }
 

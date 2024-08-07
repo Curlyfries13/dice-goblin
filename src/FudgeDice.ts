@@ -5,7 +5,7 @@ import { BATCH_SIZE } from './EngineConfig';
 import { Constant } from './Constant';
 import { DiceTerm } from './DiceTerm';
 import { StatisticalGenerator } from './StatisticalGenerator';
-import { dicePDF } from './DiceGroupPDF';
+import { multinomialCoefficient, multinomialPDF } from './utils';
 
 /**
  * A group of any number of fudge dice
@@ -26,10 +26,12 @@ export class FudgeDiceGroup implements DiceTerm, StatisticalGenerator {
     periodicity: number;
     average: number;
   };
+  combinatoricMagnitude: number;
   seed: undefined | seedrandom;
   current: number[];
   value: () => number;
   pdf: (value: number) => number;
+  multinomial: (value: number) => number;
 
   // TODO: consider if polymorphic dice need to be part of the model
   constructor(count: number = 1, seed?: PRNG) {
@@ -42,13 +44,19 @@ export class FudgeDiceGroup implements DiceTerm, StatisticalGenerator {
       periodicity: 3 * count,
       average: 0,
     };
+    this.combinatoricMagnitude = Math.pow(3, count);
     if (seed !== undefined) random.use(seed as unknown as RNG);
     this.current = [count].concat(Array(count).fill(0));
     this.value = this.roll;
     this.pdf = (value: number) => {
-      // Fudge dice are 3-sided dice, but moved up
+      // Fudge dice are 3-sided dice, but centered around 0
       let total = value + this.count.value() * 2;
-      return dicePDF(this.count.value(), this.sides.value(), total);
+      return multinomialPDF(this.count.value(), this.sides.value(), total);
+    };
+    this.multinomial = (value: number) => {
+      // Fudge dice are 3-sided dice, but centered around 0
+      let total = value + this.count.value() * 2;
+      return multinomialCoefficient(this.count.value(), this.sides.value(), total);
     };
   }
 

@@ -4,7 +4,7 @@ import { SimpleDiceGroup } from '../SimpleDiceGroup';
 import { DiceTerm } from '../DiceTerm';
 import { StatisticalGenerator } from '../StatisticalGenerator';
 import { Constant } from '../Constant';
-import { convolution } from '../utils';
+import { pdfConvolution } from '../utils';
 
 /*
  * The Exploding mode adds additional logic to continue rolling
@@ -34,6 +34,7 @@ export default class Exploding implements Modifier, DiceTerm {
     average: number;
     periodicity: number;
   };
+  combinatoricMagnitude: number;
   current: number[];
   reroller: SimpleDiceGroup;
   // exploder only props
@@ -41,6 +42,7 @@ export default class Exploding implements Modifier, DiceTerm {
   explosionProbability: number;
   value: () => number;
   pdf: (value: number) => number;
+  multinomial: (value: number) => number;
 
   constructor(base: DiceTerm, target?: StatisticalGenerator, compare?: CompareMode) {
     this.base = base;
@@ -85,6 +87,7 @@ export default class Exploding implements Modifier, DiceTerm {
         return this.current.length - 1;
       },
 
+      combinatoricMagnitude: Infinity,
       // these properties are almost certainly not helpful
       statProps: {
         min: this.base.count.statProps.min,
@@ -94,6 +97,9 @@ export default class Exploding implements Modifier, DiceTerm {
       },
       pdf: (value: number) => {
         return this.base.pdf(value);
+      },
+      multinomial: (value: number) => {
+        return this.base.multinomial(value);
       },
     };
     // NOTE: this property can change when rolled
@@ -105,6 +111,7 @@ export default class Exploding implements Modifier, DiceTerm {
     } else {
       probabilityMultiplier = this.sides.statProps.average / (this.target.statProps.average - 1);
     }
+    this.combinatoricMagnitude = Infinity;
     this.statProps = {
       // TODO: this property can change if the explosion target includes the
       // minimum value
@@ -156,13 +163,15 @@ export default class Exploding implements Modifier, DiceTerm {
           this.target,
           this.compareMode,
         );
-        return convolution(value, left, right, (x, y) => x - y);
+        return pdfConvolution(value, left, right, (x, y) => x - y);
       } else {
         // give up
         // TODO: implement PDF for non-constant / polymorphic dice
         return this.base.pdf(value);
       }
     };
+    // TODO: fully implement multinomial for this
+    this.multinomial = (value: number) => this.base.multinomial(value);
   }
 
   // returns true if the provided value should explode

@@ -4,7 +4,7 @@ import seedrandom, { PRNG } from 'seedrandom';
 import { BATCH_SIZE } from './EngineConfig';
 import { DiceTerm } from './DiceTerm';
 import { StatisticalGenerator } from './StatisticalGenerator';
-import { dicePDF } from './DiceGroupPDF';
+import { multinomialPDF } from './utils';
 
 /**
  * A Polymorphic dice group capable of handling any kind of dice
@@ -21,15 +21,19 @@ export class PolyDiceGroup implements DiceTerm, StatisticalGenerator {
     periodicity: number;
     average: number;
   };
+  combinatoricMagnitude: number;
   seed: undefined | seedrandom;
   current: number[];
   value: () => number;
   pdf: (value: number) => number;
+  multinomial: (value: number) => number;
 
   constructor(sides: StatisticalGenerator, count: StatisticalGenerator, seed?: PRNG) {
     // TODO: determine if this is going to be a problem with reference passing
     this.sides = sides;
     this.count = count;
+    // TODO: verify that this is correct
+    this.combinatoricMagnitude = Math.pow(sides.statProps.average, count.statProps.average);
     this.statProps = {
       min: count.statProps.min,
       max: count.statProps.max * sides.statProps.max,
@@ -65,11 +69,14 @@ export class PolyDiceGroup implements DiceTerm, StatisticalGenerator {
       for (let i = 0; i < countRange; i++) {
         for (let j = 0; j < sidesRange; j++) {
           // calculate the probability for this combination
-          acc += dicePDF(count.statProps.min + i, sides.statProps.min + j, value) * countProb[i] * sidesProb[j];
+          acc += multinomialPDF(count.statProps.min + i, sides.statProps.min + j, value) * countProb[i] * sidesProb[j];
         }
       }
       return acc;
     };
+    // TODO: calculate this
+    this.multinomial = (value: number) => 0;
+
     // generate the possible values
     // TODO: implement a default depth for this (with overrides)
     /*

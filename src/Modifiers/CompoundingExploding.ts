@@ -29,10 +29,12 @@ export default class CompoundingExploding implements Modifier {
     average: number;
     periodicity: number;
   };
+  combinatoricMagnitude: number;
   current: number[];
   reroller: SimpleDiceGroup;
   value: () => number;
   pdf: (value: number) => number;
+  multinomial: (value: number) => number;
 
   constructor(base: DiceTerm, target?: StatisticalGenerator, compare?: CompareMode) {
     this.base = base;
@@ -43,6 +45,8 @@ export default class CompoundingExploding implements Modifier {
     this.sides = base.sides;
     // TODO properly calculate the count for this modifier
     this.count = base.count;
+    // there's technically an infinite number of combinations
+    this.combinatoricMagnitude = Infinity;
     this.statProps = {
       // TODO: this property can change if the explosion target includes the
       // minimum value
@@ -55,8 +59,10 @@ export default class CompoundingExploding implements Modifier {
     // The reroller is a duplicate of its die, but we need an individual member
     this.reroller = new SimpleDiceGroup(this.base.sides.value(), 1);
     this.value = this.roll;
-    // TODO: fully implement the PDF function for modifiers
+    // TODO: fully implement the PDF function for this modifier
     this.pdf = (value: number) => this.base.pdf(value);
+    // TODO: fully implement multinomial function for this modifier
+    this.multinomial = (value: number) => this.base.multinomial(value);
   }
 
   thresholdFunc = (value: number) => {
