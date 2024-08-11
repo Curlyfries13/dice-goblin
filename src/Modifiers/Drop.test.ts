@@ -17,6 +17,28 @@ describe.each([
   expect(result.length).toEqual(count - drop + 1);
 });
 
+// generated values that we've made through brute force
+describe.each([
+  [4, 2, 1, 3, 1],
+  [4, 2, 1, 2, 0],
+  [4, 2, 1, 4, 4],
+  [4, 2, 1, 5, 6],
+  [4, 2, 1, 6, 5],
+  [4, 4, 1, 3, 1],
+  [4, 4, 1, 2, 0],
+  [4, 4, 1, 12, 13],
+  [4, 4, 1, 11, 30],
+  [4, 4, 2, 8, 67],
+  [4, 4, 2, 6, 61],
+  [5, 2, 1, 7, 10],
+  [5, 2, 1, 8, 6],
+])('Calculates the correct counts for expected outcomes', (count, sides, drop, target, expected) => {
+  const dice = new SimpleDiceGroup(sides, count);
+  const mod = new Drop(dice, new Constant(drop));
+  const result = mod.multinomial(target);
+  expect(result).toEqual(expected);
+});
+
 describe.each([
   [10, 6, 3],
   [9, 4, 1],

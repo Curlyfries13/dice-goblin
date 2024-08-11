@@ -1,6 +1,6 @@
 import { Combinator, CombinatorGenerator } from '../Combinator';
 import { StatisticalGenerator } from '../StatisticalGenerator';
-import { pdfConvolution } from '../utils';
+import { convolution } from '../utils';
 /*
  * The subtract combinator is another simple combinator
  */
@@ -35,18 +35,10 @@ export default class Subtract implements Combinator {
       return x + y;
     };
     this.pdf = (value: number) => {
-      return pdfConvolution(value, left, right, this.inverse);
+      return convolution(value, left, right, this.inverse, 'pdf');
     };
     this.multinomial = (value: number) => {
-      let acc = 0;
-      for (let i = left.statProps.min; i <= left.statProps.max; i++) {
-        for (let j = right.statProps.min; j <= right.statProps.max; j++) {
-          if (i + j === value) {
-            acc += left.multinomial(i) * right.multinomial(j);
-          }
-        }
-      }
-      return acc;
+      return convolution(value, left, right, this.inverse, 'multinomial');
     };
   }
 

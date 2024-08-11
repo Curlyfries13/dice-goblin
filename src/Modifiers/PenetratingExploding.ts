@@ -5,7 +5,7 @@ import { DiceTerm } from '../DiceTerm';
 import { StatisticalGenerator } from '../StatisticalGenerator';
 import { Constant } from '../Constant';
 import Subtract from '../Combinators/Subtract';
-import { pdfConvolution } from '../utils';
+import { convolution } from '../utils';
 
 /*
  * The Exploding modifier adds additional logic to continue rolling
@@ -153,7 +153,7 @@ export default class PenetratingExploding implements Modifier, DiceTerm {
           this.target,
           this.compareMode,
         );
-        return pdfConvolution(value, left, right, (x, y) => x - y);
+        return convolution(value, left, right, (x, y) => x - y, 'pdf');
       } else {
         // give up
         return this.base.pdf(value);

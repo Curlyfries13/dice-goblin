@@ -1,6 +1,6 @@
 import { Combinator, CombinatorGenerator } from '../Combinator';
 import { StatisticalGenerator } from '../StatisticalGenerator';
-import { pdfConvolution, multinomialConvolution } from '../utils';
+import { convolution } from '../utils';
 
 export default class Modulo implements Combinator {
   name = 'multiply';
@@ -36,10 +36,10 @@ export default class Modulo implements Combinator {
       return x + y;
     };
     this.pdf = (value: number) => {
-      return pdfConvolution(value, left, right, this.inverse);
+      return convolution(value, left, right, this.inverse, 'pdf');
     };
     this.multinomial = (value: number) => {
-      return multinomialConvolution(value, left, right, this.inverse);
+      return convolution(value, left, right, this.inverse, 'multinomial');
     };
   }
 

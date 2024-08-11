@@ -4,7 +4,7 @@ import { SimpleDiceGroup } from '../SimpleDiceGroup';
 import { DiceTerm } from '../DiceTerm';
 import { StatisticalGenerator } from '../StatisticalGenerator';
 import { Constant } from '../Constant';
-import { pdfConvolution } from '../utils';
+import { convolution } from '../utils';
 
 /*
  * The Reroll Once Modifier adds additional logic to the dice. Essentially, they
@@ -127,7 +127,7 @@ export default class RerollOnce implements Modifier, DiceTerm {
           this.target,
           this.compareMode,
         );
-        return pdfConvolution(value, left, right, (x, y) => x - y);
+        return convolution(value, left, right, (x, y) => x - y, 'pdf');
       } else {
         // give up
         // TODO: implement PDF for non-constant dice

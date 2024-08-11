@@ -4,7 +4,7 @@ import { SimpleDiceGroup } from '../SimpleDiceGroup';
 import { DiceTerm } from '../DiceTerm';
 import { StatisticalGenerator } from '../StatisticalGenerator';
 import { Constant } from '../Constant';
-import { pdfConvolution } from '../utils';
+import { convolution } from '../utils';
 
 /*
  * The Exploding mode adds additional logic to continue rolling
@@ -163,7 +163,7 @@ export default class Exploding implements Modifier, DiceTerm {
           this.target,
           this.compareMode,
         );
-        return pdfConvolution(value, left, right, (x, y) => x - y);
+        return convolution(value, left, right, (x, y) => x - y, 'pdf');
       } else {
         // give up
         // TODO: implement PDF for non-constant / polymorphic dice

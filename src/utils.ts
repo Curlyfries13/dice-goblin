@@ -2,10 +2,40 @@ import { factorial } from 'simple-statistics';
 import { CONVOLUTION_EPSILON } from './EngineConfig';
 import { StatisticalGenerator } from './StatisticalGenerator';
 
-// for the "faster"
-const BINOMIAL_EPSILON = 0.0001;
+type ConvolutableProps = Pick<StatisticalGenerator, 'pdf' | 'multinomial'>;
+type Convolutable = keyof ConvolutableProps;
 
-// TODO: memoize this? This can be a big performance win
+export function convolution(
+  value: number,
+  left: StatisticalGenerator,
+  right: StatisticalGenerator,
+  inverse: (x: number, y: number) => number,
+  property: Convolutable,
+) {
+  const rangeLeft = left.statProps.max - left.statProps.min + 1;
+  let acc = 0;
+  let guard = 0;
+  let limit = Math.max(left.statProps.periodicity, right.statProps.periodicity);
+  // todo create a maximum depth
+  for (let i = 0; i < rangeLeft; i++) {
+    let sub = left.statProps.min + i;
+    const step = left[property](sub) * right[property](inverse(value, sub));
+    acc += step;
+    // checking if we're under epsilon doesn't guarantee we aren't missing some
+    // other important values: some PDF's are periodic
+    if (step < CONVOLUTION_EPSILON) {
+      guard++;
+      if (guard >= limit) {
+        return acc;
+      }
+    } else {
+      guard = 0;
+    }
+  }
+  return acc;
+}
+
+// TODO memoize this? This can be a big performance win
 export function pdfConvolution(
   value: number,
   left: StatisticalGenerator,

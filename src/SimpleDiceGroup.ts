@@ -19,7 +19,6 @@ import { multinomialCoefficient, multinomialPDF } from './utils';
 export class SimpleDiceGroup implements DiceTerm, StatisticalGenerator {
   sides: StatisticalGenerator;
   count: StatisticalGenerator;
-
   statProps: {
     min: number;
     max: number;
