@@ -3,7 +3,7 @@ import { DiceTerm } from '../DiceTerm';
 import { StatisticalGenerator } from '../StatisticalGenerator';
 import { Constant } from '../Constant';
 import KeepDropMode from './KeepDropMode';
-import { binomialCoefficient } from '../utils';
+import { dropMultinomial } from '../utils';
 import Subtract from '../Combinators/Subtract';
 
 /*
@@ -42,7 +42,7 @@ export default class Drop implements Modifier {
   pdf: (value: number) => number;
   multinomial: (value: number) => number;
 
-  // TODO add exceptions in the following case(s)
+  // TODO: add exceptions or warnings in the following case(s)
   // 1) the drop number == the number of dice
   constructor(
     base: DiceTerm,
@@ -77,52 +77,17 @@ export default class Drop implements Modifier {
     this.pdf = (value: number) =>
       this.multinomial(value) / Math.pow(1.0 / this.base.sides.statProps.average, this.base.count.statProps.average);
     this.multinomial = (value: number) =>
-      Drop.solveDropMultinomial(
+      dropMultinomial(
+        // TODO: fix this for dice which don't have a minimum side value of 1
+        1,
         this.base.sides.statProps.max,
+        1,
         this.base.count.statProps.max,
+        this.dropMode,
         this.count.statProps.max,
         value,
       );
   }
-
-  // TODO: see if this is generally applicable
-  // NOTE: assumes that dice are discrete and have sides which decrement by 1
-  // TODO: make this work for dropping highest.
-  private static solveDropMultinomial(sides: number, count: number, keep: number, target: number): number {
-    if (keep < 1 || count < 1) {
-      return 0;
-    }
-    if (keep > count) {
-      keep = count;
-    }
-    if (sides === 1) {
-      // we've reached all 1's
-      if (keep === target) {
-        return 1;
-      }
-      return 0;
-    }
-
-    let result = 0;
-    if (target === sides * keep) {
-      const dropMax = Math.pow(sides, count);
-      for (let i = 0; i < keep; i++) {
-        result += Math.pow(sides - 1, count - i) * binomialCoefficient(count, i);
-      }
-      return dropMax - result;
-    }
-    for (let k = 0; k <= keep; k++) {
-      const weight = binomialCoefficient(count, k);
-      const rest = Drop.solveDropMultinomial(sides - 1, count - k, keep - k, target - sides * k);
-      result = result + weight * rest;
-    }
-    return result;
-  }
-  // use simple statistics if dropping from a mono-type
-  // e.g. 3d6, or 4d6,
-  //
-  // NOTE: _not_ tested for poly dice or groups
-  simpleStatistics() {}
 
   roll(): number {
     return this.rollGroup()[0];

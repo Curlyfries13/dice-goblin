@@ -69,6 +69,7 @@
   },
   "dependencies": {
     "chevrotain": "^11.0.3",
+    "fast-memoize": "^2.5.2",
     "random": "^4.1.0",
     "seedrandom": "^3.0.5"
   }

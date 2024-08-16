@@ -32,6 +32,7 @@ describe.each([
   [4, 4, 2, 6, 61],
   [5, 2, 1, 7, 10],
   [5, 2, 1, 8, 6],
+  [9, 2, 1, 9, 9],
 ])('Calculates the correct counts for expected outcomes', (count, sides, drop, target, expected) => {
   const dice = new SimpleDiceGroup(sides, count);
   const mod = new Drop(dice, new Constant(drop));
