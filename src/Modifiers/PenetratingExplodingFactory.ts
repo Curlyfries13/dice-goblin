@@ -8,8 +8,6 @@ const PenetratingExplodingFactory: TargetModifierFactory = (params: {
   base: DiceTerm;
   target: StatisticalGenerator | undefined;
   compare: CompareMode;
-}) => {
-  return new PenetratingExploding(params.base, params.target, params.compare);
-};
+}) => new PenetratingExploding(params.base, params.target, params.compare);
 
 export default PenetratingExplodingFactory;

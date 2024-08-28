@@ -1,5 +1,6 @@
-import { FudgeDiceGroup } from './FudgeDice';
 import seedrandom from 'seedrandom';
+
+import FudgeDiceGroup from 'FudgeDice';
 
 it('should initialize a single fudge die by default', () => {
   const dice = new FudgeDiceGroup();

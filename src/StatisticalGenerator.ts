@@ -4,12 +4,10 @@
 
 import { StatProps } from './StatProps';
 
-// TODO: add a name, or generator that might make it easier to memoize
 export interface StatisticalGenerator {
   // TODO: (BIG) consider whether or not a values generator is a good idea
+  // this is necessary for dice which don't start @ 1, or more complicated multinomials
   // values: Generator<number, void, unknown>;
-  // NOTE: Adding a values generator would be necessary for the dynamic programming algorithm.
-  // TODO: (BIG) add memoization
   statProps: StatProps;
   // the number of ways this generator can generate values
   // e.g. for a d6, it is 6, for a constant it is 1, for 2d6 it is 36

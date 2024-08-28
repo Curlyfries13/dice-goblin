@@ -4,18 +4,26 @@ import { convolution } from '../utils';
 
 export default class Multiply implements Combinator {
   name = 'multiply';
+
   left: StatisticalGenerator;
+
   right: StatisticalGenerator;
+
   value: () => number;
+
   statProps: {
     min: number;
     max: number;
     periodicity: number;
     average: number;
   };
+
   combinatoricMagnitude: number;
+
   inverse: (x: number, y: number) => number;
+
   pdf: (value: number) => number;
+
   multinomial: (value: number) => number;
 
   constructor(left: StatisticalGenerator, right: StatisticalGenerator) {
@@ -30,18 +38,14 @@ export default class Multiply implements Combinator {
     };
     this.value = this.apply;
     this.combinatoricMagnitude = left.combinatoricMagnitude * right.combinatoricMagnitude;
-    this.inverse = (x: number, y: number) => {
+    this.inverse = (x: number, y: number) =>
       // this seems like a bad idea due to floating point madness
       // this case makes it feel like a good idea to use generators and the
       // values member function so we can iterate all possibilities (to a point)
-      return x / y;
-    };
-    this.pdf = (value: number) => {
-      return convolution(value, left, right, this.inverse, 'pdf');
-    };
-    this.multinomial = (value: number) => {
-      return convolution(value, left, right, this.inverse, 'multinomial');
-    };
+      x / y;
+    this.pdf = (value: number) => convolution(value, left, right, this.inverse, 'pdf');
+    this.multinomial = (value: number) =>
+      convolution(value, left, right, this.inverse, 'multinomial');
   }
 
   apply() {

@@ -1,7 +1,7 @@
-import Exploding from './Exploding';
 import seedrandom from 'seedrandom';
-import { SimpleDiceGroup } from '../SimpleDiceGroup';
-import { ConstantDiceGroup } from '../ConstantDiceGroup';
+import Exploding from './Exploding';
+import SimpleDiceGroup from '../SimpleDiceGroup';
+import ConstantDiceGroup from '../ConstantDiceGroup';
 
 it('Explodes dice that roll the highest amount', () => {
   // this produces a roll with 2 max rolls
@@ -9,7 +9,7 @@ it('Explodes dice that roll the highest amount', () => {
   const rng = seedrandom('testrng');
   const dice = new SimpleDiceGroup(4, 10, rng);
   const explodingDice = new Exploding(dice);
-  const result = explodingDice.rollGroup();
+  explodingDice.rollGroup();
   expect(explodingDice.count.value()).toBeGreaterThan(10);
 });
 

@@ -8,8 +8,6 @@ const DropFactory: MagnitudeModifierFactory = (params: {
   base: DiceTerm;
   magnitude: StatisticalGenerator | undefined;
   mode: KeepDropMode | undefined;
-}) => {
-  return new Drop(params.base, params.magnitude, params.mode);
-};
+}) => new Drop(params.base, params.magnitude, params.mode);
 
 export default DropFactory;

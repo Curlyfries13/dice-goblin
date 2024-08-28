@@ -8,8 +8,6 @@ const KeepFactory: MagnitudeModifierFactory = (params: {
   base: DiceTerm;
   magnitude: StatisticalGenerator | undefined;
   mode: KeepDropMode | undefined;
-}) => {
-  return new Keep(params.base, params.magnitude, params.mode);
-};
+}) => new Keep(params.base, params.magnitude, params.mode);
 
 export default KeepFactory;

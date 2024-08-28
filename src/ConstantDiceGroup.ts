@@ -1,6 +1,6 @@
-import { DiceTerm } from './DiceTerm';
-import { Constant } from './Constant';
-import { StatisticalGenerator } from './StatisticalGenerator';
+import { DiceTerm } from 'DiceTerm';
+import Constant from 'Constant';
+import { StatisticalGenerator } from 'StatisticalGenerator';
 
 /**
  * A "dice" group that returns a constant result
@@ -8,9 +8,14 @@ import { StatisticalGenerator } from './StatisticalGenerator';
  * Mostly useful for testing
  */
 
-export class ConstantDiceGroup implements DiceTerm {
+export default class ConstantDiceGroup implements DiceTerm {
   sides: StatisticalGenerator;
+
+  currentSides: number;
+
   count: StatisticalGenerator;
+
+  currentCount: number;
 
   statProps: {
     min: number;
@@ -18,25 +23,33 @@ export class ConstantDiceGroup implements DiceTerm {
     average: number;
     periodicity: number;
   };
+
   combinatoricMagnitude: number;
+
   value: () => number;
+
   pdf: (value: number) => number;
+
   multinomial: (value: number) => number;
+
   current: number[];
+
   results: number[];
 
   constructor(results: number[], sides?: number) {
     this.results = results;
     if (sides === undefined) {
-      this.sides = new Constant(Math.max(...results));
+      const defaultSides = Math.max(...results);
+      this.sides = new Constant(defaultSides);
+      this.currentSides = defaultSides;
     } else {
       this.sides = new Constant(sides);
+      this.currentSides = sides;
     }
-    const sum = results.reduce((acc, curr) => {
-      return (acc += curr);
-    }, 0);
+    const sum = results.reduce((acc, curr) => acc + curr, 0);
 
     this.count = new Constant(results.length);
+    this.currentCount = results.length;
     this.statProps = {
       min: sum,
       max: sum,

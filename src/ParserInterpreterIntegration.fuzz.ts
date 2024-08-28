@@ -37,7 +37,7 @@ describe('Parser-Interpreter integration tests', () => {
             sides: fc.integer({ min: 1, max: 1000000 }),
             magnitude: fc.integer({ min: 1, max: 1000000 }),
           })
-          .filter(({ mod, count, sides, magnitude }) => count <= magnitude),
+          .filter(({ count, magnitude }) => count <= magnitude),
         ({ mod, count, sides, magnitude }) => {
           const parseText = `${count}d${sides}${modifiers[mod]}${magnitude}`;
           const parseResult = parseDice(parseText);
@@ -61,7 +61,7 @@ describe('Parser-Interpreter integration tests', () => {
             sides: fc.integer({ min: 1, max: 1000000 }),
             target: fc.integer({ min: 1, max: 1000000 }),
           })
-          .filter(({ mod, count, sides, target }) => sides <= target),
+          .filter(({ sides, target }) => sides <= target),
         ({ mod, comp, count, sides, target }) => {
           const parseText = `${count}d${sides}${modifiers[mod]}${comparison[comp]}${target}`;
           const parseResult = parseDice(parseText);

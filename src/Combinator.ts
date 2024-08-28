@@ -1,4 +1,4 @@
-import { StatisticalGenerator } from './StatisticalGenerator';
+import { StatisticalGenerator } from 'StatisticalGenerator';
 /**
  * A combinator combines two terms in a consistent way
  * basic examples are + and -
@@ -17,4 +17,7 @@ export interface Combinator extends StatisticalGenerator {
   inverse: (x: number, y: number) => number;
 }
 
-export type CombinatorGenerator = (left: StatisticalGenerator, right: StatisticalGenerator) => Combinator;
+export type CombinatorGenerator = (
+  left: StatisticalGenerator,
+  right: StatisticalGenerator,
+) => Combinator;

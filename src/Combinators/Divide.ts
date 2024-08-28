@@ -4,10 +4,13 @@ import { convolution } from '../utils';
 
 export default class Divide implements Combinator {
   name = 'multiply';
+
   left: StatisticalGenerator;
+
   right: StatisticalGenerator;
 
   value: () => number;
+
   statProps: {
     min: number;
     max: number;
@@ -15,15 +18,18 @@ export default class Divide implements Combinator {
     // this gets wonky due to floating point madness
     periodicity: number;
   };
+
   combinatoricMagnitude: number;
+
   inverse: (x: number, y: number) => number;
+
   pdf: (value: number) => number;
+
   multinomial: (value: number) => number;
 
   constructor(left: StatisticalGenerator, right: StatisticalGenerator) {
     this.left = left;
     this.right = right;
-    // TODO: Arithmetic of random variables doesn't act like you think it does
     this.statProps = {
       min: left.statProps.min / right.statProps.max,
       max: left.statProps.max / right.statProps.min,
@@ -35,15 +41,10 @@ export default class Divide implements Combinator {
     };
     this.combinatoricMagnitude = left.combinatoricMagnitude * right.combinatoricMagnitude;
     this.value = this.apply;
-    this.inverse = (x: number, y: number) => {
-      return x * y;
-    };
-    this.pdf = (value: number) => {
-      return convolution(value, left, right, this.inverse, 'pdf');
-    };
-    this.multinomial = (value: number) => {
-      return convolution(value, left, right, this.inverse, 'multinomial');
-    };
+    this.inverse = (x: number, y: number) => x * y;
+    this.pdf = (value: number) => convolution(value, left, right, this.inverse, 'pdf');
+    this.multinomial = (value: number) =>
+      convolution(value, left, right, this.inverse, 'multinomial');
   }
 
   apply() {

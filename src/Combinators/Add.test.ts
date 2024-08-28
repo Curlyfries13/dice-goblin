@@ -1,6 +1,6 @@
 import Add from './Add';
-import { Constant } from '../Constant';
-import { PolyDiceGroup } from '../PolyDiceGroup';
+import Constant from '../Constant';
+import PolyDiceGroup from '../PolyDiceGroup';
 
 it('should add two constant generators', () => {
   const termA = new Constant(1);

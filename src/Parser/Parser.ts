@@ -24,12 +24,24 @@ const WhiteSpace = createToken({
 });
 
 const Combinator = createToken({ name: 'Combinator', pattern: /(\+|-|\/|%|\*|\*\*)/ });
-const DieSeparator = createToken({ name: 'DieSeparator', pattern: /d/, push_mode: 'postDicePattern' });
+const DieSeparator = createToken({
+  name: 'DieSeparator',
+  pattern: /d/,
+  push_mode: 'postDicePattern',
+});
 const KeepMod = createToken({ name: 'KeepMod', pattern: /k(l|h)?/, push_mode: 'dicePattern' });
 const DropMod = createToken({ name: 'DropMod', pattern: /d(l|h)?/, push_mode: 'dicePattern' });
 const RerollMod = createToken({ name: 'RerollMod', pattern: /ro?/, push_mode: 'dicePattern' });
-const ExplodingMod = createToken({ name: 'ExplodeMod', pattern: /!(!|p)?/, push_mode: 'dicePattern' });
-const Comparison = createToken({ name: 'Comparison', pattern: /=|(<|>)=?/, push_mode: 'dicePattern' });
+const ExplodingMod = createToken({
+  name: 'ExplodeMod',
+  pattern: /!(!|p)?/,
+  push_mode: 'dicePattern',
+});
+const Comparison = createToken({
+  name: 'Comparison',
+  pattern: /=|(<|>)=?/,
+  push_mode: 'dicePattern',
+});
 const FailurePoint = createToken({ name: 'FailurePoint', pattern: /f/, push_mode: 'dicePattern' });
 
 // grouping tokens
@@ -41,7 +53,17 @@ const Comma = createToken({ name: 'Comma', pattern: /,/, push_mode: 'dicePattern
 const LParen = createToken({ name: 'LParen', pattern: /\(/, push_mode: 'dicePattern' });
 const RParen = createToken({ name: 'RParen', pattern: /\)/, push_mode: 'dicePattern' });
 
-const commonTokens = [Integer, FudgeDie, WhiteSpace, Combinator, Comparison, FailurePoint, Comma, LParen, RParen];
+const commonTokens = [
+  Integer,
+  FudgeDie,
+  WhiteSpace,
+  Combinator,
+  Comparison,
+  FailurePoint,
+  Comma,
+  LParen,
+  RParen,
+];
 
 const modesTokens = {
   modes: {
@@ -173,7 +195,10 @@ class DieParser extends CstParser {
       $.SUBRULE($.scalar, { LABEL: 'magnitude' });
       $.OPTION(() => {
         $.CONSUME(DieSeparator);
-        $.OR([{ ALT: () => $.SUBRULE1($.scalar, { LABEL: 'sides' }) }, { ALT: () => $.CONSUME(FudgeDie) }]);
+        $.OR([
+          { ALT: () => $.SUBRULE1($.scalar, { LABEL: 'sides' }) },
+          { ALT: () => $.CONSUME(FudgeDie) },
+        ]);
         $.OPTION1(() => {
           $.SUBRULE($.modifier);
         });
@@ -192,7 +217,7 @@ const parse = function parse(text: string) {
   const cst = parser.expression();
 
   return {
-    cst: cst,
+    cst,
     lexErrors: lexResult.errors,
     parseErrors: parser.errors,
   };

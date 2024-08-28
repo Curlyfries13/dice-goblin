@@ -1,4 +1,7 @@
 {
+  "parserOptions": {
+    "project": "./tsconfig.json"
+  },
   "compilerOptions": {
     "lib": ["esnext", "dom"],
     "target": "esnext",
@@ -9,6 +12,7 @@
     "skipLibCheck": true,
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
+    "baseUrl": "./src/",
     "typeRoots": ["./node_modules/@types", "./@types"],
     "moduleResolution": "bundler"
   },

@@ -1,5 +1,5 @@
 import Power from './Power';
-import { Constant } from '../Constant';
+import Constant from '../Constant';
 
 describe('subtracts constant generators', () => {
   it.each([

@@ -45,13 +45,15 @@ describe('simple dice rolls', () => {
         fc.integer({ min: 0, max: 3 }).map((v) => {
           if (v === 0) {
             return '+';
-          } else if (v === 1) {
-            return '-';
-          } else if (v === 2) {
-            return '*';
-          } else if (v === 3) {
-            return '/';
           }
+          if (v === 1) {
+            return '-';
+          }
+          if (v === 2) {
+            return '*';
+          }
+          // default 3... why not switch
+          return '/';
         }),
         (n, s, m, f) => {
           const parseText = `${n}d${s}${f}${m}`;
@@ -93,7 +95,7 @@ describe('simple dice rolls', () => {
             sides: fc.integer({ min: 1, max: 1000000 }),
             magnitude: fc.integer({ min: 1, max: 1000000 }),
           })
-          .filter(({ mod, count, sides, magnitude }) => count <= magnitude),
+          .filter(({ count, magnitude }) => count <= magnitude),
         ({ mod, count, sides, magnitude }) => {
           const parseText = `${count}d${sides}${modifiers[mod]}${magnitude}`;
           const parseResult = parse(parseText);
@@ -118,7 +120,7 @@ describe('simple dice rolls', () => {
             sides: fc.integer({ min: 1, max: 1000000 }),
             target: fc.integer({ min: 1, max: 1000000 }),
           })
-          .filter(({ mod, count, sides, target }) => sides <= target),
+          .filter(({ sides, target }) => sides <= target),
         ({ mod, comp, count, sides, target }) => {
           const parseText = `${count}d${sides}${modifiers[mod]}${comparison[comp]}${target}`;
           const parseResult = parse(parseText);

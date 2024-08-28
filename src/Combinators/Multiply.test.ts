@@ -1,5 +1,5 @@
 import Multiply from './Multiply';
-import { Constant } from '../Constant';
+import Constant from '../Constant';
 
 describe('multiplies constant generators', () => {
   it.each([

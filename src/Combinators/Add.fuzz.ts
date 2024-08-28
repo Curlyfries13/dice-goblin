@@ -1,7 +1,6 @@
 import fc from 'fast-check';
 import Add from './Add';
-import { Constant } from '../Constant';
-import { PolyDiceGroup } from '../PolyDiceGroup';
+import Constant from '../Constant';
 
 describe('Add modifier test', () => {
   it('generates stat blocks as expected', () => {

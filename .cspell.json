@@ -10,6 +10,8 @@
     "convolution",
     "convolutable",
     "multinomial",
+    "multinomials",
+    "polydice",
     "parameterless",
     "reroller",
     "seedrandom"

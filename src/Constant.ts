@@ -1,30 +1,28 @@
-import { StatisticalGenerator } from './StatisticalGenerator';
+import { StatisticalGenerator } from 'StatisticalGenerator';
 
-export class Constant implements StatisticalGenerator {
+export default class Constant implements StatisticalGenerator {
   value: () => number;
+
   pdf: (value: number) => number;
+
   multinomial: (value: number) => number;
-  values: Generator<number, void, unknown>;
+
+  // TODO: if we go to generators for all values, this is how it could be done
+  // values: Generator<number, void, unknown>;
+
   statProps: {
     min: number;
     max: number;
     periodicity: number;
     average: number;
   };
+
   combinatoricMagnitude: number;
 
   constructor(constantValue: number) {
     this.value = () => constantValue;
-    this.pdf = (value: number) => {
-      return value === constantValue ? 1 : 0;
-    };
-    this.multinomial = (value: number) => {
-      return value === constantValue ? 1 : 0;
-    };
-    // TODO: Consider if we do want to use generators throughout the project
-    this.values = (function* () {
-      yield constantValue;
-    })();
+    this.pdf = (value: number) => (value === constantValue ? 1 : 0);
+    this.multinomial = (value: number) => (value === constantValue ? 1 : 0);
     this.statProps = {
       min: constantValue,
       max: constantValue,

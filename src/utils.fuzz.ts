@@ -28,13 +28,17 @@ describe('binomialCoefficient', () => {
   });
   it('is symmetrical', () => {
     fc.assert(
-      fc.property(fc.integer({ min: 3, max: 1000000 }), fc.integer({ min: 1, max: 500000 }), (distribution, offset) => {
-        const mid = Math.ceil(distribution / 2);
-        fc.pre(offset < mid);
-        const a = binomialCoefficient(distribution, offset);
-        const b = binomialCoefficient(distribution, distribution - offset);
-        expect(a).toEqual(b);
-      }),
+      fc.property(
+        fc.integer({ min: 3, max: 1000000 }),
+        fc.integer({ min: 1, max: 500000 }),
+        (distribution, offset) => {
+          const mid = Math.ceil(distribution / 2);
+          fc.pre(offset < mid);
+          const a = binomialCoefficient(distribution, offset);
+          const b = binomialCoefficient(distribution, distribution - offset);
+          expect(a).toEqual(b);
+        },
+      ),
     );
   });
 });

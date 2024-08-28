@@ -8,8 +8,6 @@ const CompoundingExplodingFactory: TargetModifierFactory = (params: {
   base: DiceTerm;
   target: StatisticalGenerator | undefined;
   compare: CompareMode;
-}) => {
-  return new CompoundingExploding(params.base, params.target, params.compare);
-};
+}) => new CompoundingExploding(params.base, params.target, params.compare);
 
 export default CompoundingExplodingFactory;

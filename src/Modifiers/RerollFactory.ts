@@ -8,8 +8,6 @@ const RerollFactory: TargetModifierFactory = (params: {
   base: DiceTerm;
   target: StatisticalGenerator | undefined;
   compare: CompareMode;
-}) => {
-  return new Reroll(params.base, params.target, params.compare);
-};
+}) => new Reroll(params.base, params.target, params.compare);
 
 export default RerollFactory;

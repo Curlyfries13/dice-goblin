@@ -1,27 +1,35 @@
 import CompareMode from '../CompareMode';
 import { Modifier } from '../Modifier';
-import { SimpleDiceGroup } from '../SimpleDiceGroup';
+import SimpleDiceGroup from '../SimpleDiceGroup';
 import { DiceTerm } from '../DiceTerm';
 import { StatisticalGenerator } from '../StatisticalGenerator';
-import { Constant } from '../Constant';
+import Constant from '../Constant';
 import { convolution } from '../utils';
 /*
  * The Reroll Modifier adds additional logic to the dice. Essentially, they
  * prevent specific values from surfacing.
- *
  */
 
 export default class Reroll implements Modifier, DiceTerm {
   name = 'Reroll';
+
   // TODO: I don't like rewriting classes to have all of these elements
   // belonging to all other similar classes
   target: StatisticalGenerator;
+
   compareMode: CompareMode;
+
   base: DiceTerm;
+
   baseResults: number[];
 
   sides: StatisticalGenerator;
+
+  currentSides: number;
+
   count: StatisticalGenerator;
+
+  currentCount: number;
 
   statProps: {
     min: number;
@@ -29,34 +37,40 @@ export default class Reroll implements Modifier, DiceTerm {
     average: number;
     periodicity: number;
   };
+
   combinatoricMagnitude: number;
+
   current: number[];
+
   reroller: StatisticalGenerator;
+
   value: () => number;
+
   pdf: (value: number) => number;
+
   multinomial: (value: number) => number;
 
   // these members are only for reroll
   // this represents the total number of values which are possible
   rerollValuesMagnitude: StatisticalGenerator;
+
   rerollCount: number;
 
   constructor(base: DiceTerm, target?: StatisticalGenerator, compare?: CompareMode) {
     this.base = base;
     // by default, a reroll happens on the minimum roll only (i.e. brutal 1's)
     // TODO: figure out how this works with Groups (e.g. {3d8, 2d6}r)
-    // NOTE: I can't think of a way where you can have a minimum that's not 1
+    // NOTE: I can't think of a way where you can have a minimum that's not 1, unless it works on groups too
     this.target = target === undefined ? new Constant(1) : target;
     this.compareMode = compare === undefined ? CompareMode.Equal : compare;
     this.baseResults = this.base.current;
     this.current = this.base.current;
     this.sides = new Constant(base.sides.statProps.max);
+    this.currentSides = base.sides.statProps.max;
 
     // Do not copy the base values: this causes weirdness when you try to modify their properties
     this.count = {
-      value: () => {
-        return this.current.length - 1;
-      },
+      value: () => this.current.length - 1,
       combinatoricMagnitude: this.base.combinatoricMagnitude,
       statProps: {
         min: this.base.statProps.min,
@@ -64,28 +78,28 @@ export default class Reroll implements Modifier, DiceTerm {
         average: this.base.count.statProps.average,
         periodicity: this.base.sides.statProps.max,
       },
-      pdf: (value: number) => {
-        return this.base.pdf(value);
-      },
-      multinomial: (value: number) => {
-        return this.base.multinomial(value);
-      },
+      pdf: (value: number) => this.base.pdf(value),
+      multinomial: (value: number) => this.base.multinomial(value),
     };
+    this.currentCount = this.base.count.statProps.max;
     let newMin = base.statProps.min;
     let newMax = base.statProps.max;
     if (this.compareMode === CompareMode.Equal) {
       if (
-        base.statProps.min === this.target.statProps.min &&
-        base.statProps.min === this.target.statProps.max &&
         // NOTE: in exotic situations this may actually be wrong, but it
         // doesn't seem to be possible to actually construct such a situation
+        base.statProps.min === this.target.statProps.min &&
+        base.statProps.min === this.target.statProps.max &&
         base.statProps.min + 1 <= base.statProps.max
       ) {
         // NOTE: this may actually cause weird artifacts on more exotic rolls,
         // but as-is this language may not be able to fully use this
         newMin = base.statProps.min + 1;
       }
-      if (base.statProps.max === this.target.statProps.max && base.statProps.max === this.target.statProps.max) {
+      if (
+        base.statProps.max === this.target.statProps.max &&
+        base.statProps.max === this.target.statProps.max
+      ) {
         newMax = base.statProps.max - 1;
       }
     }
@@ -104,7 +118,8 @@ export default class Reroll implements Modifier, DiceTerm {
     this.value = this.roll;
     // the target matters if it's value is within the range of this
     const isTargetImpactful =
-      this.target.statProps.min <= this.sides.statProps.max || this.target.statProps.max >= this.sides.statProps.min;
+      this.target.statProps.min <= this.sides.statProps.max ||
+      this.target.statProps.max >= this.sides.statProps.min;
 
     if (!isTargetImpactful) {
       this.rerollValuesMagnitude = new Constant(this.sides.statProps.average);
@@ -116,6 +131,7 @@ export default class Reroll implements Modifier, DiceTerm {
       const diff = Math.abs(this.sides.statProps.average - this.target.statProps.average);
       this.rerollValuesMagnitude = new Constant(this.sides.statProps.average - diff);
     }
+    // TODO: fix this
     this.pdf = (value: number) => {
       // NOTE: performance consider if this is a performance hit for convolution
       // Much like the other modifiers, we use convolution for more complicated
@@ -126,32 +142,35 @@ export default class Reroll implements Modifier, DiceTerm {
         this.base.count.statProps.max === 1 &&
         this.base.sides.statProps.min === this.base.sides.statProps.max
       ) {
+        // this rolls the target function!!
         if (this.thresholdFunc(value)) {
           return 0;
         }
         // this is 1 die and within range
         return 1 / this.rerollValuesMagnitude.statProps.average;
-      } else if (
+      }
+      if (
         this.base.count.statProps.min === this.base.count.statProps.max &&
         this.base.sides.statProps.min === this.base.sides.statProps.max
       ) {
-        const left = new Reroll(new SimpleDiceGroup(this.base.sides.value(), 1), this.target, this.compareMode);
+        const left = new Reroll(
+          new SimpleDiceGroup(this.base.sides.value(), 1),
+          this.target,
+          this.compareMode,
+        );
         const right = new Reroll(
           new SimpleDiceGroup(this.base.sides.value(), this.base.count.value() - 1),
           this.target,
           this.compareMode,
         );
         return convolution(value, left, right, (x, y) => x - y, 'pdf');
-      } else {
-        // give up
-        // TODO: implement PDF for non-constant dice
-        return this.base.pdf(value);
       }
+      // give up
+      // TODO: implement PDF for non-constant dice
+      return this.base.pdf(value);
     };
     // TODO: implement multinomial for this
-    this.multinomial = (value: number) => {
-      return this.base.multinomial(value);
-    };
+    this.multinomial = (value: number) => this.base.multinomial(value);
   }
 
   thresholdFunc = (value: number): boolean => {
@@ -180,7 +199,7 @@ export default class Reroll implements Modifier, DiceTerm {
     this.base.rollGroup();
     this.rerollCount = 0;
     this.baseResults = this.base.current.slice(0);
-    let active = this.baseResults.slice(1).reduce((acc, value, i) => {
+    const active = this.baseResults.slice(1).reduce((acc, value, i) => {
       if (this.thresholdFunc(value)) {
         acc.push(i);
       }
@@ -192,7 +211,7 @@ export default class Reroll implements Modifier, DiceTerm {
     while (active.length > 0) {
       // TODO if we want to track rerolls, we do it here
       const newValue = this.reroller.value();
-      this.rerollCount++;
+      this.rerollCount += 1;
       if (!this.thresholdFunc(newValue)) {
         this.baseResults[active[0] + 1] = newValue;
         active.shift();
@@ -201,7 +220,7 @@ export default class Reroll implements Modifier, DiceTerm {
     // TODO: this looks like it could be a performance bottleneck for very small systems
     // recompute the sum
     let sum = 0;
-    for (let i = 1; i < this.baseResults.length; i++) {
+    for (let i = 1; i < this.baseResults.length; i += 1) {
       sum += this.baseResults[i];
     }
     this.baseResults[0] = sum;

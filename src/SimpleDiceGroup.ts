@@ -1,11 +1,11 @@
 import random, { RNG } from 'random';
 import seedrandom, { PRNG } from 'seedrandom';
 
-import { BATCH_SIZE } from './EngineConfig';
-import { Constant } from './Constant';
-import { DiceTerm } from './DiceTerm';
-import { StatisticalGenerator } from './StatisticalGenerator';
-import { multinomialCoefficient, multinomialPDF } from './utils';
+import { BATCH_SIZE } from 'EngineConfig';
+import Constant from 'Constant';
+import { DiceTerm } from 'DiceTerm';
+import { StatisticalGenerator } from 'StatisticalGenerator';
+import { multinomialCoefficient, multinomialPDF } from 'utils';
 
 /**
  * A dice group is a single type of Dice, e.g. a six-sided dice
@@ -16,27 +16,41 @@ import { multinomialCoefficient, multinomialPDF } from './utils';
  * The die also doesn't handle polymorphic rolls, i.e. if the number of dice or
  * the faces on a die change
  */
-export class SimpleDiceGroup implements DiceTerm, StatisticalGenerator {
+export default class SimpleDiceGroup implements DiceTerm, StatisticalGenerator {
   sides: StatisticalGenerator;
+
+  currentSides: number;
+
   count: StatisticalGenerator;
+
+  currentCount: number;
+
   statProps: {
     min: number;
     max: number;
     periodicity: number;
     average: number;
   };
+
   combinatoricMagnitude: number;
+
   seed: undefined | seedrandom;
+
   current: number[];
+
   // placeholder
   value: () => number;
+
   pdf: (value: number) => number;
+
   multinomial: (value: number) => number;
 
   constructor(sides: number = 6, count: number = 1, seed?: PRNG) {
     this.sides = new Constant(sides);
+    this.currentSides = sides;
     this.count = new Constant(count);
-    this.combinatoricMagnitude = Math.pow(sides, count);
+    this.currentCount = count;
+    this.combinatoricMagnitude = sides ** count;
     this.statProps = {
       // this die engine always uses a minimum value of 1
       // Note this acts strangely if the number of sides is 0. In this case an
@@ -52,7 +66,8 @@ export class SimpleDiceGroup implements DiceTerm, StatisticalGenerator {
     this.current = [count].concat(Array(count).fill(1));
     this.value = this.roll;
     this.pdf = (value: number) => multinomialPDF(this.count.value(), this.sides.value(), value);
-    this.multinomial = (value: number) => multinomialCoefficient(this.count.value(), this.sides.value(), value);
+    this.multinomial = (value: number) =>
+      multinomialCoefficient(this.count.value(), this.sides.value(), value);
   }
 
   // Roll this group and return the result
@@ -82,24 +97,16 @@ export class SimpleDiceGroup implements DiceTerm, StatisticalGenerator {
     for (let i = 0; i < count; i += BATCH_SIZE) {
       // determine if we run a full batch or a smaller batch
       if (resultCount + BATCH_SIZE < count) {
-        results = results.concat(
-          Array.apply(0, Array(BATCH_SIZE)).map(() => {
-            return random.int(1, sides);
-          }),
-        );
+        results = results.concat(Array.apply(0, Array(BATCH_SIZE)).map(() => random.int(1, sides)));
         resultCount += BATCH_SIZE;
       } else {
         const subBatchSize = count - resultCount;
         results = results.concat(
-          Array.apply(0, Array(subBatchSize)).map(() => {
-            return random.int(1, sides);
-          }),
+          Array.apply(0, Array(subBatchSize)).map(() => random.int(1, sides)),
         );
       }
     }
-    const reducer = (total: number, value: number): number => {
-      return total + value;
-    };
+    const reducer = (total: number, value: number): number => total + value;
     const sum = results.reduce(reducer, 0);
     results.unshift(sum);
     this.current = results;

@@ -1,7 +1,7 @@
-import interpreter from './Interpreter';
+import Interpreter from './Interpreter';
 import { parse } from './Parser/Parser';
 
-const resolver = new interpreter();
+const resolver = new Interpreter();
 
 function parseDice(pattern: string) {
   const result = parse(pattern);

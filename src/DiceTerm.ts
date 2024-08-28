@@ -1,5 +1,5 @@
-import { Term } from './Term';
-import { StatisticalGenerator } from './StatisticalGenerator';
+import { Term } from 'Term';
+import { StatisticalGenerator } from 'StatisticalGenerator';
 
 /**
  * A Dice term is a term that includes rolling dice.
@@ -9,5 +9,8 @@ import { StatisticalGenerator } from './StatisticalGenerator';
 
 export interface DiceTerm extends Term {
   sides: StatisticalGenerator;
+  // for things like polyDice, this interface interacts with modifiers
+  currentSides: number;
   count: StatisticalGenerator;
+  currentCount: number;
 }

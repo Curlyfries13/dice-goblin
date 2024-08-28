@@ -1,5 +1,4 @@
 import { StatisticalGenerator } from './StatisticalGenerator';
-import { StatProps } from './StatProps';
 
 /**
  * A Term is a distinct part of a Dice expression.

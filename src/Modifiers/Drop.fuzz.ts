@@ -1,8 +1,8 @@
 import fc from 'fast-check';
 
-import { PolyDiceGroup } from '../PolyDiceGroup';
-import { FudgeDiceGroup } from '../FudgeDice';
-import { Constant } from '../Constant';
+import PolyDiceGroup from '../PolyDiceGroup';
+import FudgeDiceGroup from '../FudgeDice';
+import Constant from '../Constant';
 
 import Drop from './Drop';
 import KeepDropMode from './KeepDropMode';
@@ -15,7 +15,9 @@ describe('Drop Modifier Fuzzing', () => {
         fc.integer({ min: 1, max: 1000000 }),
         // count & drop: these are dependent
         // we shouldn't be testing if we can drop more than the count - that should be an error
-        fc.integer({ min: 1, max: 1000000 }).chain((count) => fc.tuple(fc.constant(count), fc.nat({ max: count }))),
+        fc
+          .integer({ min: 1, max: 1000000 })
+          .chain((count) => fc.tuple(fc.constant(count), fc.nat({ max: count }))),
         // drop mode
         fc.boolean(),
         (sides, countDrop, lowHigh) => {
@@ -25,7 +27,7 @@ describe('Drop Modifier Fuzzing', () => {
           const baseDice = new PolyDiceGroup(sidesGen, countGen);
           const drop = new Drop(baseDice, dropGen, lowHigh ? KeepDropMode.Low : KeepDropMode.High);
           drop.rollGroup();
-          expect(drop.count.value()).toBe(countGen.value() - dropGen.value());
+          expect(drop.currentCount).toBe(countGen.value() - dropGen.value());
         },
       ),
     );
@@ -35,13 +37,16 @@ describe('Drop Modifier Fuzzing', () => {
       fc.property(
         // count & drop: these are dependent
         // we shouldn't be testing if we can drop more than the count - that should be an error
-        fc.integer({ min: 1, max: 1000000 }).chain((count) => fc.tuple(fc.constant(count), fc.nat({ max: count }))),
+        fc
+          .integer({ min: 1, max: 1000000 })
+          .chain((count) => fc.tuple(fc.constant(count), fc.nat({ max: count }))),
         // drop mode
         fc.boolean(),
         (countDrop, lowHigh) => {
           const dropGen = new Constant(countDrop[1]);
           const baseDice = new FudgeDiceGroup(countDrop[0]);
           const drop = new Drop(baseDice, dropGen, lowHigh ? KeepDropMode.Low : KeepDropMode.High);
+          expect(drop.currentCount).toBe(baseDice.currentCount - dropGen.value());
         },
       ),
     );

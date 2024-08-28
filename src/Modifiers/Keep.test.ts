@@ -1,9 +1,9 @@
-import Keep from './Keep';
 import seedrandom from 'seedrandom';
-import { SimpleDiceGroup } from '../SimpleDiceGroup';
-import { ConstantDiceGroup } from '../ConstantDiceGroup';
-import { FudgeDiceGroup } from '../FudgeDice';
-import { Constant } from '../Constant';
+import Keep from './Keep';
+import SimpleDiceGroup from '../SimpleDiceGroup';
+import ConstantDiceGroup from '../ConstantDiceGroup';
+import FudgeDiceGroup from '../FudgeDice';
+import Constant from '../Constant';
 
 describe.each([
   [10, 6, 3],

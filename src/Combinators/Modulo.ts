@@ -4,18 +4,26 @@ import { convolution } from '../utils';
 
 export default class Modulo implements Combinator {
   name = 'multiply';
+
   left: StatisticalGenerator;
+
   right: StatisticalGenerator;
+
   value: () => number;
+
   statProps: {
     min: number;
     max: number;
     periodicity: number;
     average: number;
   };
+
   combinatoricMagnitude: number;
+
   inverse: (x: number, y: number) => number;
+
   pdf: (value: number) => number;
+
   multinomial: (value: number) => number;
 
   constructor(left: StatisticalGenerator, right: StatisticalGenerator) {
@@ -32,15 +40,10 @@ export default class Modulo implements Combinator {
     };
     this.value = this.apply;
     // one inverse function is +; it's dumb but it works!
-    this.inverse = (x: number, y: number) => {
-      return x + y;
-    };
-    this.pdf = (value: number) => {
-      return convolution(value, left, right, this.inverse, 'pdf');
-    };
-    this.multinomial = (value: number) => {
-      return convolution(value, left, right, this.inverse, 'multinomial');
-    };
+    this.inverse = (x: number, y: number) => x + y;
+    this.pdf = (value: number) => convolution(value, left, right, this.inverse, 'pdf');
+    this.multinomial = (value: number) =>
+      convolution(value, left, right, this.inverse, 'multinomial');
   }
 
   apply() {

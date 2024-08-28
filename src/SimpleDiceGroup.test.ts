@@ -1,5 +1,5 @@
-import { SimpleDiceGroup } from './SimpleDiceGroup';
 import seedrandom from 'seedrandom';
+import SimpleDiceGroup from './SimpleDiceGroup';
 
 it('should initialize a six sided dice by default', () => {
   const dice = new SimpleDiceGroup();

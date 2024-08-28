@@ -1,5 +1,5 @@
 import fc from 'fast-check';
-import { SimpleDiceGroup } from './SimpleDiceGroup';
+import SimpleDiceGroup from './SimpleDiceGroup';
 
 describe('Simple Dice Group statistics', () => {
   it('calculates dice average correctly', () => {

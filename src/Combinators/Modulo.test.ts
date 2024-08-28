@@ -1,5 +1,5 @@
 import Modulo from './Modulo';
-import { Constant } from '../Constant';
+import Constant from '../Constant';
 
 describe('subtracts constant generators', () => {
   it.each([

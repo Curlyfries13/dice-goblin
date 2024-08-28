@@ -1,6 +1,6 @@
 import fc from 'fast-check';
-import { PolyDiceGroup } from './PolyDiceGroup';
-import { Constant } from './Constant';
+import PolyDiceGroup from './PolyDiceGroup';
+import Constant from './Constant';
 
 describe('PolyDice Dice Group statistics', () => {
   it('calculates dice average correctly', () => {
@@ -15,7 +15,9 @@ describe('PolyDice Dice Group statistics', () => {
           const countGen = new Constant(count);
           const dice = new PolyDiceGroup(sidesGen, countGen);
 
-          expect(dice.statProps.average).toBe((countGen.statProps.max * (sidesGen.statProps.max + 1)) / 2);
+          expect(dice.statProps.average).toBe(
+            (countGen.statProps.max * (sidesGen.statProps.max + 1)) / 2,
+          );
         },
       ),
     );

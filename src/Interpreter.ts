@@ -1,38 +1,41 @@
-import { CstNode, ILexingError, IRecognitionException } from 'chevrotain';
+// TODO: use Chevrotain features to catch problems
+// import { CstNode, ILexingError, IRecognitionException } from 'chevrotain';
 
-import { Constant } from './Constant';
-import { FudgeDiceGroup } from './FudgeDice';
-import CompareMode from './CompareMode';
-import { DieParser } from './Parser/Parser';
-import { PolyDiceGroup } from './PolyDiceGroup';
+import Constant from 'Constant';
+import FudgeDiceGroup from 'FudgeDice';
+import CompareMode from 'CompareMode';
+import { DieParser } from 'Parser/Parser';
+import PolyDiceGroup from 'PolyDiceGroup';
 
-import ExplodingFactory from './Modifiers/ExplodingFactory';
-import CompoundingExplodingFactory from './Modifiers/CompoundingExplodingFactory';
-import PenetratingExplodingFactory from './Modifiers/PenetratingExplodingFactory';
-import RerollFactory from './Modifiers/RerollFactory';
-import RerollOnceFactory from './Modifiers/RerollOnceFactory';
-import KeepFactory from './Modifiers/KeepFactory';
-import DropFactory from './Modifiers/DropFactory';
-import KeepDropMode from './Modifiers/KeepDropMode';
+import ExplodingFactory from 'Modifiers/ExplodingFactory';
+import CompoundingExplodingFactory from 'Modifiers/CompoundingExplodingFactory';
+import PenetratingExplodingFactory from 'Modifiers/PenetratingExplodingFactory';
+import RerollFactory from 'Modifiers/RerollFactory';
+import RerollOnceFactory from 'Modifiers/RerollOnceFactory';
+import KeepFactory from 'Modifiers/KeepFactory';
+import DropFactory from 'Modifiers/DropFactory';
+import KeepDropMode from 'Modifiers/KeepDropMode';
 
-import { StatisticalGenerator } from './StatisticalGenerator';
-import { DiceTerm } from './DiceTerm';
-import Add from './Combinators/Add';
-import Subtract from './Combinators/Subtract';
-import Divide from './Combinators/Divide';
-import Modulo from './Combinators/Modulo';
-import Multiply from './Combinators/Multiply';
-import Power from './Combinators/Power';
-import { ModifierFactory } from './ModifierFactory';
-import { TargetModifierFactory } from './TargetModifierFactory';
-import { MagnitudeModifierFactory } from './MagnitudeModifierFactory';
-import { Modifier } from './Modifier';
+import { StatisticalGenerator } from 'StatisticalGenerator';
+import { DiceTerm } from 'DiceTerm';
+import Add from 'Combinators/Add';
+import Subtract from 'Combinators/Subtract';
+import Divide from 'Combinators/Divide';
+import Modulo from 'Combinators/Modulo';
+import Multiply from 'Combinators/Multiply';
+import Power from 'Combinators/Power';
+import { ModifierFactory } from 'ModifierFactory';
+import { TargetModifierFactory } from 'TargetModifierFactory';
+import { MagnitudeModifierFactory } from 'MagnitudeModifierFactory';
+import { Modifier } from 'Modifier';
 
 /**
  * The Parser from Chevrotain produces a tree
  * The Roll engine can roll any combination of dice
  * This Interpreter moves the result from the tree to execution
  */
+// TODO: turn this back on
+/* eslint-disable */
 const parserInstance = new DieParser();
 const BaseDiceVisitor = parserInstance.getBaseCstVisitorConstructor();
 
@@ -67,6 +70,7 @@ class DieToAstVisitor extends BaseDiceVisitor {
         case '**':
           return new Power(left, right);
         // not sure what to do about defaulting
+        // TODO: implement error when defaulting here
       }
       // get the combination
     } else if (ctx.Comparison) {
@@ -79,9 +83,8 @@ class DieToAstVisitor extends BaseDiceVisitor {
   expressionMember(ctx: any): StatisticalGenerator {
     if (ctx.group) {
       return this.visit(ctx.group);
-    } else {
-      return this.visit(ctx.dieExpression);
     }
+    return this.visit(ctx.dieExpression);
   }
 
   group(ctx: any): StatisticalGenerator {
@@ -90,48 +93,46 @@ class DieToAstVisitor extends BaseDiceVisitor {
     const groupElements = this.visit(ctx.groupElements);
     if (groupElements.length === 1) {
       return groupElements[0];
-    } else {
-      // combine all groups
-      // TODO: fix this to allow modifiers to operate correctly, currently it
-      // just bunches them all together
-      const subExpression = groupElements.reduce((acc: StatisticalGenerator, curr: StatisticalGenerator) => {
-        return new Add(acc, curr);
-      });
-      return subExpression;
     }
+    // combine all groups
+    // BUG: fix this to allow modifiers to operate correctly, currently it
+    // just bunches them all together
+    const subExpression = groupElements.reduce(
+      (acc: StatisticalGenerator, curr: StatisticalGenerator) => new Add(acc, curr),
+    );
+    return subExpression;
   }
 
   groupElements(ctx: any): DiceTerm[] {
-    const subResults: DiceTerm[] = ctx.dieExpression.map((diceToken: any) => this.visit(ctx.dieExpression));
+    const subResults: DiceTerm[] = ctx.dieExpression.map((diceToken: any) =>
+      this.visit(ctx.dieExpression),
+    );
     return subResults;
   }
 
   magnitudeModifier(ctx: any): MagnitudeModifierFactory {
     if (ctx.DropMod) {
       return DropFactory;
-    } else {
-      // TODO: don't always assume this is a keep mod, and add interpreter error codes
-      // Should be keep mod
-      return KeepFactory;
     }
+    // TODO: don't always assume this is a keep mod, and add interpreter error codes
+    // Should be keep mod
+    return KeepFactory;
   }
 
   targetModifier(ctx: any): TargetModifierFactory {
     if (ctx.ExplodeMod) {
       if (ctx.ExplodeMod[0].image === '!p') {
         return PenetratingExplodingFactory;
-      } else if (ctx.ExplodeMod[0].image === '!!') {
+      }
+      if (ctx.ExplodeMod[0].image === '!!') {
         return CompoundingExplodingFactory;
-      } else {
-        return ExplodingFactory;
       }
-    } else {
-      if (ctx.RerollMod[0].image === 'ro') {
-        return RerollOnceFactory;
-      } else {
-        return RerollFactory;
-      }
+      return ExplodingFactory;
     }
+    if (ctx.RerollMod[0].image === 'ro') {
+      return RerollOnceFactory;
+    }
+    return RerollFactory;
   }
 
   // give me a function that takes a base
@@ -168,37 +169,37 @@ class DieToAstVisitor extends BaseDiceVisitor {
           magnitude: statGen,
           mode: kdMode,
         });
-      } else {
-        const resolved: TargetModifierFactory = factory as TargetModifierFactory;
-        return resolved({
-          base,
-          target: statGen,
-          compare: compare,
-        });
       }
+      const resolved: TargetModifierFactory = factory as TargetModifierFactory;
+      return resolved({
+        base,
+        target: statGen,
+        compare,
+      });
     };
     return out;
   }
 
   // funnily enough, a die expression can literally be a single value?
   dieExpression(ctx: any): StatisticalGenerator {
-    let magnitude = this.visit(ctx.magnitude);
+    const magnitude = this.visit(ctx.magnitude);
     // the output of a dieExpression
     let output: StatisticalGenerator;
 
     if (!ctx.DieSeparator) {
       // no die separator in this die expression - this is a scalar (captured by magnitude)
       return magnitude;
-    } else if (ctx.FudgeDice) {
+    }
+    if (ctx.FudgeDice) {
       output = new FudgeDiceGroup(magnitude);
     } else {
       // get the number of sides
-      let sides = this.visit(ctx.sides);
+      const sides = this.visit(ctx.sides);
       output = new PolyDiceGroup(sides, magnitude);
     }
     // check for modifiers: they are optional
     if (ctx.modifier) {
-      let modifierFactory = this.visit(ctx.modifier);
+      const modifierFactory = this.visit(ctx.modifier);
       return modifierFactory({ base: output });
     }
     return output;
@@ -220,10 +221,9 @@ class DieToAstVisitor extends BaseDiceVisitor {
     if (ctx.Integer) {
       const constant = new Constant(parseInt(ctx.Integer[0].image));
       return constant;
-    } else {
-      const subGroup = this.visit(ctx.subGroup);
-      return subGroup;
     }
+    const subGroup = this.visit(ctx.subGroup);
+    return subGroup;
   }
 
   subGroup(ctx: any): StatisticalGenerator {
