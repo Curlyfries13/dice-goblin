@@ -2,6 +2,9 @@ import fc from 'fast-check';
 import parseDice from './index';
 import { Modifier } from './Modifier';
 
+// TODO: consolidate this with other uses of the isModifier typing
+// TODO: fix this typing issue, it may be possible to fix this w/ Chevrotain
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 function isModifier(object: any): object is Modifier {
   return 'name' in object;
 }

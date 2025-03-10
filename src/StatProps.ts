@@ -9,5 +9,6 @@ export interface StatProps {
   max: number;
   periodicity: number;
   // Allow arbitrary extension
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   [key: string]: any;
 }

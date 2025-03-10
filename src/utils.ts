@@ -70,7 +70,6 @@ function multinomialCoefficient(diceCount: number, sides: number, total: number)
   let result = 0;
   const max = Math.floor((total - diceCount) / sides);
   for (let i = 0; i <= max; i += 1) {
-    // eslint-disable-next-line
     const sign = i & 1 ? -1 : 1;
     const a = binomialCoefficient(diceCount, i);
     const b = binomialCoefficient(total - sides * i - 1, diceCount - 1);
@@ -128,7 +127,6 @@ function solveDropMultinomial(
   for (let k = 0; k <= keep; k += step) {
     const weight = binomialCoefficientMemo(count, k);
     // need to call recursively, so obviously it's not defined
-    // eslint-disable-next-line @typescript-eslint/no-use-before-define
     const rest = solveDropMultinomialMemo(
       min,
       max - 1,

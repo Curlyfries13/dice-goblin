@@ -96,6 +96,8 @@ const DiceLexer = new Lexer(modesTokens);
 // it also has a few improvements.
 class DieParser extends CstParser {
   // top-level declaration
+  // TODO: fix this typing issue, it may be possible to fix this w/ Chevrotain
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   expression: () => any;
 
   constructor() {
@@ -103,6 +105,7 @@ class DieParser extends CstParser {
     // this is for 'conciseness' per the example implementations also cast as
     // any so that I don't have to worry about TS2339: we create a lot of
     // forward declarations
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const $ = this as any;
     // top-level declaration to avoid tst complaints; this is handled by the
     // self validation

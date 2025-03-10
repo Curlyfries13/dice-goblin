@@ -1,6 +1,7 @@
 import parseDice from 'index';
 import { Modifier } from 'Modifier';
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 function isModifier(object: any): object is Modifier {
   return 'name' in object;
 }
